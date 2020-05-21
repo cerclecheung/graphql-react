@@ -16,6 +16,8 @@ async function seed() {
     User.create(
       {
         username: 'rwieruch',
+        email: 'hello@robin.com',
+        password: 'rwieruch',
         messages: [
           {
             text: 'Published the Road to learn React',
@@ -29,6 +31,8 @@ async function seed() {
     User.create(
       {
         username: 'ddavids',
+        email: 'hello@david.com',
+        password: 'ddavids',
         messages: [
           {
             text: 'Happy to release ...',
