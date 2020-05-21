@@ -1,30 +1,30 @@
-let users = {
-  1: {
-    id: '1',
-    username: 'Robin Wieruch',
-    messageIds: [1],
+import Sequelize from 'sequelize';
+const pkg = require('../../package.json');
+
+const databaseName =
+  pkg.name + (process.env.NODE_ENV === 'test' ? '-test' : '');
+
+const db = new Sequelize(
+  process.env.DATABASE_URL ||
+    `postgres://localhost:5432/${databaseName}`,
+  //   process.env.DATABASE,
+  //   process.env.DATABASE_USER,
+  //   process.env.DATABASE_PASSWORD,
+  {
+    dialect: 'postgres',
   },
-  2: {
-    id: '2',
-    username: 'Dave Davids',
-    messageIds: [2],
-  },
+);
+
+const models = {
+  User: db.import('./user'),
+  Message: db.import('./message'),
 };
 
-let messages = {
-  1: {
-    id: '1',
-    text: 'Hello World',
-    userId: '1',
-  },
-  2: {
-    id: '2',
-    text: 'By World',
-    userId: '2',
-  },
-};
+Object.keys(models).forEach((key) => {
+  if ('associate' in models[key]) {
+    models[key].associate(models);
+  }
+});
 
-export default {
-  users,
-  messages,
-};
+export { db };
+export default models;
