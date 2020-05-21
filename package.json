@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start-dev": "nodemon server"
+		"start-dev": "nodemon  --exec babel-node server"
 	},
 	"keywords": [],
 	"author": "",
@@ -13,9 +13,15 @@
 	"dependencies": {
 		"apollo-server": "^2.13.1",
 		"apollo-server-express": "^2.13.1",
-		"express": "^4.17.1"
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"nodemon": "^1.18.9"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.9.6",
+		"@babel/node": "^7.8.7",
+		"@babel/preset-env": "^7.9.6",
+		"dotenv": "^8.2.0",
 		"nodemon": "^2.0.4"
 	}
 }
