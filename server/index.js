@@ -5,60 +5,53 @@ import resolvers from './resolvers';
 import models, { db } from './models';
 import cors from 'cors';
 const app = express();
+const createApp = () => {
+  app.use(cors());
+  app.use((err, req, res, next) => {
+    console.error(err);
+    console.error(err.stack);
+    res
+      .status(err.status || 500)
+      .send(err.message || 'Internal server error.');
+  });
+};
 
-app.use(cors());
-
-const typeDefs = schema;
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: {
-    models,
-    me: models.User.findByLogin('rwieruch'),
-  },
-});
-
-server.applyMiddleware({ app });
-const eraseDatabaseOnSync = true;
-
-db.sync({ force: eraseDatabaseOnSync }).then(async () => {
-  if (eraseDatabaseOnSync) {
-    createUsersWithMessages();
-  }
+const startListening = () => {
+  const typeDefs = schema;
+  // start listening (and create a 'server' object representing our server)
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: async () => ({
+      models,
+      me: await models.User.findByLogin('rwieruch'),
+    }),
+  });
+  server.applyMiddleware({ app });
   app.listen({ port: 8000 }, () => {
     console.log('Apollo Server on http://localhost:8000/graphql');
   });
-});
-const createUsersWithMessages = async () => {
-  await models.User.create(
-    {
-      username: 'rwieruch',
-      messages: [
-        {
-          text: 'Published the Road to learn React',
-        },
-      ],
-    },
-    {
-      include: [models.Message],
-    },
-  );
-
-  await models.User.create(
-    {
-      username: 'ddavids',
-      messages: [
-        {
-          text: 'Happy to release ...',
-        },
-        {
-          text: 'Published a complete ...',
-        },
-      ],
-    },
-    {
-      include: [models.Message],
-    },
-  );
 };
+const syncDb = () => db.sync();
+// const eraseDatabaseOnSync = true;
+
+// db.sync({ force: eraseDatabaseOnSync }).then(async () => {
+//   if (eraseDatabaseOnSync) {
+//     createUsersWithMessages();
+//   }
+// });
+
+async function bootApp() {
+  await syncDb();
+  await createApp();
+  await startListening();
+}
+// This evaluates as true when this file is run directly from the command line,
+// i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)
+// It will evaluate false when this module is required by another module - for example,
+// if we wanted to require our app in a test spec
+if (require.main === module) {
+  bootApp();
+} else {
+  createApp();
+}
