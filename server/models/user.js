@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 const user = (db, DataTypes) => {
   const User = db.define('user', {
     username: {
@@ -27,9 +28,21 @@ const user = (db, DataTypes) => {
     },
   });
 
+  //   associations
   User.associate = (models) => {
     User.hasMany(models.Message, { onDelete: 'CASCADE' });
   };
+
+  //   signUp
+  User.beforeCreate(async (user) => {
+    user.password = await user.generatePasswordHash();
+  });
+  User.prototype.generatePasswordHash = async function () {
+    const saltRounds = 10;
+    return await bcrypt.hash(this.password, saltRounds);
+  };
+
+  //   login
   User.findByLogin = async (login) => {
     let user = await User.findOne({
       where: { username: login },
@@ -42,6 +55,9 @@ const user = (db, DataTypes) => {
     }
 
     return user;
+  };
+  User.prototype.validatePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
   };
 
   return User;
