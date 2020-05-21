@@ -15,6 +15,7 @@ export default {
     createMessage: combineResolvers(
       isAuthenticated,
       async (parent, { text }, { me, models }) => {
+        console.log('me', me);
         return await models.Message.create({
           text,
           userId: me.id,
