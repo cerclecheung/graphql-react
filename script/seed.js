@@ -18,6 +18,7 @@ async function seed() {
         username: 'rwieruch',
         email: 'hello@robin.com',
         password: 'rwieruch',
+        role: 'admin',
         messages: [
           {
             text: 'Published the Road to learn React',

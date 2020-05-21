@@ -4,9 +4,11 @@ import schema from './schema';
 import resolvers from './resolvers';
 import models, { db } from './models';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 const app = express();
 const createApp = () => {
   app.use(cors());
+
   app.use((err, req, res, next) => {
     console.error(err);
     console.error(err.stack);
@@ -19,14 +21,30 @@ const createApp = () => {
 const startListening = () => {
   const typeDefs = schema;
   // start listening (and create a 'server' object representing our server)
+  const getMe = async (req) => {
+    const token = req.headers['x-token'];
+
+    if (token) {
+      try {
+        return await jwt.verify(token, process.env.SECRET);
+      } catch (e) {
+        throw new AuthenticationError(
+          'Your session expired. Sign in again.',
+        );
+      }
+    }
+  };
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: async () => ({
-      models,
-      me: await models.User.findByLogin('rwieruch'),
-      secret: process.env.SECRET,
-    }),
+    context: async ({ req }) => {
+      const me = await getMe(req);
+      return {
+        models,
+        me,
+        secret: process.env.SECRET,
+      };
+    },
   });
   server.applyMiddleware({ app });
   app.listen({ port: 8000 }, () => {
@@ -34,13 +52,6 @@ const startListening = () => {
   });
 };
 const syncDb = () => db.sync();
-// const eraseDatabaseOnSync = true;
-
-// db.sync({ force: eraseDatabaseOnSync }).then(async () => {
-//   if (eraseDatabaseOnSync) {
-//     createUsersWithMessages();
-//   }
-// });
 
 async function bootApp() {
   await syncDb();

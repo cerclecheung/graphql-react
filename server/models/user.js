@@ -26,6 +26,9 @@ const user = (db, DataTypes) => {
         len: [7, 42],
       },
     },
+    role: {
+      type: DataTypes.STRING,
+    },
   });
 
   //   associations
@@ -42,7 +45,7 @@ const user = (db, DataTypes) => {
     return await bcrypt.hash(this.password, saltRounds);
   };
 
-  //   login
+  //   signIn
   User.findByLogin = async (login) => {
     let user = await User.findOne({
       where: { username: login },

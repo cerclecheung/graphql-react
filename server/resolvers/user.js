@@ -57,6 +57,11 @@ export default {
 
       return { token: createToken(user, secret, '30m') };
     },
+    deleteUser: async (parent, { id }, { models }) => {
+      return await models.User.destroy({
+        where: { id },
+      });
+    },
   },
   User: {
     messages: async (user, args, { models }) => {
