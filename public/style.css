@@ -1,0 +1,30 @@
+/* body {
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+} */
+
+.react-datepicker-wrapper {
+  display: flex !important;
+  width: 100%;
+}
+.react-datepicker__day--selected {
+  background-color: forestgreen !important;
+}
+
+@media (min-width: 640px) {
+  .react-datepicker-wrapper {
+    width: 75%;
+  }
+}

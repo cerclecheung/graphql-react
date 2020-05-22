@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import schema from './schema';
@@ -8,6 +9,10 @@ import jwt from 'jsonwebtoken';
 const app = express();
 const createApp = () => {
   app.use(cors());
+  app.use(express.static(path.join(__dirname, '..', 'public')));
+  app.use('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public/index.html'));
+  });
 
   app.use((err, req, res, next) => {
     console.error(err);
