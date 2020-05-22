@@ -8,9 +8,6 @@ const message = (db, DataTypes) => {
         notEmpty: { args: true, msg: 'A message has to have a text' },
       },
     },
-    // createdAt: {
-    //   type: Sequelize.STRING,
-    // },
   });
 
   Message.associate = (models) => {
