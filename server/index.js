@@ -6,6 +6,7 @@ import resolvers from './resolvers';
 import models, { db } from './models';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import http from 'http';
 const app = express();
 const createApp = () => {
   app.use(cors());
@@ -42,7 +43,10 @@ const startListening = () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: async ({ req }) => {
+    context: async ({ req, connection }) => {
+      if (connection) {
+        return { models };
+      }
       const me = await getMe(req);
       return {
         models,
@@ -52,7 +56,9 @@ const startListening = () => {
     },
   });
   server.applyMiddleware({ app });
-  app.listen({ port: 8000 }, () => {
+  const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
+  httpServer.listen({ port: 8000 }, () => {
     console.log('Apollo Server on http://localhost:8000/graphql');
   });
 };
