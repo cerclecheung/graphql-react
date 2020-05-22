@@ -8,7 +8,7 @@ import models from '../server/models';
 
 const { User, Message } = models;
 
-async function seed() {
+async function seed(date) {
   await db.sync({ force: true });
   console.log('db synced!');
 
@@ -22,6 +22,7 @@ async function seed() {
         messages: [
           {
             text: 'Published the Road to learn React',
+            createdAt: date.setSeconds(date.getSeconds() + 1),
           },
         ],
       },
@@ -37,9 +38,11 @@ async function seed() {
         messages: [
           {
             text: 'Happy to release ...',
+            createdAt: date.setSeconds(date.getSeconds() + 1),
           },
           {
             text: 'Published a complete ...',
+            createdAt: date.setSeconds(date.getSeconds() + 1),
           },
         ],
       },
@@ -72,7 +75,7 @@ async function seed() {
 async function runSeed() {
   console.log('seeding...');
   try {
-    await seed();
+    await seed(new Date());
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
