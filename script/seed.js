@@ -22,7 +22,7 @@ async function seed(date) {
         messages: [
           {
             text: 'Published the Road to learn React',
-            createdAt: date.setSeconds(date.getSeconds() + 1),
+            // createdAt: date.setSeconds(date.getSeconds() + 1),
           },
         ],
       },
@@ -38,11 +38,11 @@ async function seed(date) {
         messages: [
           {
             text: 'Happy to release ...',
-            createdAt: date.setSeconds(date.getSeconds() + 1),
+            // createdAt: date.setSeconds(date.getSeconds() + 1),
           },
           {
             text: 'Published a complete ...',
-            createdAt: date.setSeconds(date.getSeconds() + 1),
+            // createdAt: date.setSeconds(date.getSeconds() + 1),
           },
         ],
       },
