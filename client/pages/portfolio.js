@@ -19,7 +19,8 @@ const Portfolio = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return data.messages.edges.map((msg) => {
-    return <div>{msg.user.username}</div>;
+    console.log(msg);
+    return <div key={msg.id}>{msg.user.username}</div>;
   });
 };
 

@@ -5,9 +5,7 @@ import history from './history';
 import App from './app';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
-const client = new ApolloClient({
-  uri: 'http://127.0.0.1:8000/graphql',
-});
+const client = new ApolloClient({});
 
 // establishes socket connection
 // import './socket';

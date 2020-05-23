@@ -252,9 +252,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const client = new apollo_boost__WEBPACK_IMPORTED_MODULE_5__["default"]({
-  uri: 'http://127.0.0.1:8000/graphql'
-}); // establishes socket connection
+const client = new apollo_boost__WEBPACK_IMPORTED_MODULE_5__["default"]({}); // establishes socket connection
 // import './socket';
 
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_6__["ApolloProvider"], {
@@ -320,7 +318,10 @@ const Portfolio = () => {
   if (loading) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Loading...");
   if (error) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Error :(");
   return data.messages.edges.map(msg => {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, msg.user.username);
+    console.log(msg);
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      key: msg.id
+    }, msg.user.username);
   });
 }; // class Portfolio extends React.Component {
 //   constructor() {
