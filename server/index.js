@@ -3,7 +3,7 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import schema from './schema';
 import resolvers from './resolvers';
-import models, { db } from './models';
+import models, { db } from './db';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import http from 'http';
@@ -73,8 +73,11 @@ async function bootApp() {
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)
 // It will evaluate false when this module is required by another module - for example,
 // if we wanted to require our app in a test spec
-if (require.main === module) {
-  bootApp();
-} else {
-  createApp();
-}
+
+// if (require.main === module) {
+//   bootApp();
+// } else {
+//   createApp();
+// }
+
+bootApp();

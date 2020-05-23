@@ -7,7 +7,7 @@ const App = () => {
   return (
     <div>
       <Navbar />
-      {/* <Routes className="flex justify-center self-center" /> */}
+      <Routes className="flex justify-center self-center" />
     </div>
   );
 };

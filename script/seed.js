@@ -3,8 +3,8 @@
 // const { db } = require('../server/models');
 // const models = require('../server/models');
 
-import { db } from '../server/models';
-import models from '../server/models';
+import { db } from '../server/db';
+import models from '../server/db';
 
 const { User, Message } = models;
 
