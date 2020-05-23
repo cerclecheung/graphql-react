@@ -28,7 +28,8 @@ const startListening = () => {
   const typeDefs = schema;
   // start listening (and create a 'server' object representing our server)
   const getMe = async (req) => {
-    const token = req.headers['x-token'];
+    const token = req.headers['authorization'].split(' ')[1];
+    console.log('token', token);
 
     if (token) {
       try {
