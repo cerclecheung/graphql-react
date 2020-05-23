@@ -6,7 +6,7 @@
 import { db } from '../server/db';
 import models from '../server/db';
 
-const { User, Message } = models;
+const { User, Message, Transaction } = models;
 
 async function seed(date) {
   await db.sync({ force: true });
@@ -51,21 +51,24 @@ async function seed(date) {
       },
     ),
   ]);
-  // const messages = await Promise.all([
-  //   Message.create({
-  //     name: 'flow class',
-  //     description:
-  //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-  //     startTime: '2020-04-30 08:30:00',
-  //     endTime: '2020-04-30 09:00:00',
-  //     teacherId: 1,
-  //     type: 'yoga',
-  //   }),
-  // ]);
+  const transactions = await Promise.all([
+    Transaction.create({
+      symbol: 'FB',
+      quantity: 1,
+      userId: 1,
+      price: '15.0',
+    }),
+    Transaction.create({
+      symbol: 'FB',
+      quantity: -10,
+      userId: 1,
+      price: '15.0',
+    }),
+  ]);
 
   console.log(`seeded ${users.length} users`);
 
-  // console.log(`seeded ${events.length} events`)
+  console.log(`seeded ${transactions.length} transactions`);
   console.log(`seeded successfully`);
 }
 

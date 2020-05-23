@@ -1,5 +1,3 @@
-import { Sequelize } from 'sequelize';
-
 const message = (db, DataTypes) => {
   const Message = db.define('message', {
     text: {

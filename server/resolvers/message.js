@@ -12,6 +12,7 @@ const fromCursorHash = (string) =>
 export default {
   Query: {
     messages: async (parent, { cursor, limit = 100 }, { models }) => {
+      console.log('limit', limit);
       const messages = await models.Message.findAll({
         order: [['createdAt', 'DESC']],
         limit: limit + 1,

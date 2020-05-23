@@ -298,12 +298,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const readMessages = apollo_boost__WEBPACK_IMPORTED_MODULE_2__["gql"]`
-  query {
-    messages {
+  query($limit: Int) {
+    messages(limit: $limit) {
       edges {
         user {
           username
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
@@ -314,7 +318,11 @@ const Portfolio = () => {
     loading,
     error,
     data
-  } = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_1__["useQuery"])(readMessages);
+  } = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_1__["useQuery"])(readMessages, {
+    variables: {
+      limit: 2
+    }
+  });
   if (loading) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Loading...");
   if (error) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Error :(");
   return data.messages.edges.map(msg => {
