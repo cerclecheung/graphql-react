@@ -10,35 +10,34 @@ import { Portfolio, Login } from './pages';
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount() {
+  componentDidMount(props) {
     // this.props.loadInitialData();
   }
 
   render() {
-    const isLoggedIn = localStorage.getItem('token');
-
+    const { isLoggedIn } = this.props;
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/login" component={Login} />
-        <Route exact path="/portfolio" component={Portfolio} />
         {/* <Route path="/signup" component={Signup} /> */}
         {/* <Route exact path="/classes" component={EventListing} /> */}
         {/* <Route path="/teachers/:teacherHash" component={HerProfile} /> */}
-        {/* {isLoggedIn && ( */}
-        {/* <Switch> */}
-        {/* Routes placed here are only available after logging in */}
-        {/* <Route path="/classes/create" component={CreateEvent} />
+        {isLoggedIn && (
+          <Switch>
+            {/* Routes placed here are only available after logging in */}
+            <Route exact path="/portfolio" component={Portfolio} />
+            {/* <Route path="/classes/create" component={CreateEvent} />
             <Route
               path="/classes/:eventHash/edit"
               component={EditEvent}
             />
             <Route path="/me/bio" component={MyBio} />
-            <Route path="/me/classes" component={MyClassListing} />
+        // <Route path="/me/classes" component={MyClassListing} />*/}
           </Switch>
-        )} */}
+        )}
         {/* Displays our Login component as a fallback */}
-        {/*  <Route component={EventListing} /> */} */}
+        <Route component={Login} />
       </Switch>
     );
   }

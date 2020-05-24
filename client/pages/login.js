@@ -23,13 +23,11 @@ const Login = () => {
   const [loginMutation] = useMutation(LOGIN, {
     //   onCompleted takes in the gql result
     onCompleted({ signIn }) {
-      console.log('onCompleted', signIn.token);
       localStorage.setItem('apollo-token', signIn.token);
       setMutationError('');
       history.push('/portfolio');
     },
     onError(error) {
-      console.log('ewrwerwe', error);
       setMutationError(error.graphQLErrors[0].message);
     },
   });

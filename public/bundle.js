@@ -102,9 +102,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const isLoggedIn = localStorage.getItem('apollo-token');
 
 const App = () => {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_1__["Navbar"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_routes__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_1__["Navbar"], {
+    isLoggedIn: isLoggedIn
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_routes__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    isLoggedIn: isLoggedIn,
     className: "flex justify-center self-center"
   }));
 };
@@ -150,37 +154,42 @@ __webpack_require__.r(__webpack_exports__);
  // import { logout } from '../store';
 
 const Navbar = ({
-  handleClick,
   isLoggedIn
-}) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-  className: "px-10 w-50 object:contain",
-  src: "https://i.ibb.co/yk2Q8vT/hollabody-long-white.png",
-  border: "0"
-}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-  className: "flex justify-between px-10 "
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-  className: "p-2",
-  to: "/"
-}, "About"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-  className: "p-2",
-  to: "/classes"
-}, "All Classes")), isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-  className: "p-2",
-  to: "/me/bio"
-}, "Me"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-  className: "p-2",
-  to: "/me/classes"
-}, "My Class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-  className: "p-2",
-  href: "#",
-  onClick: handleClick
-}, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-  className: "p-2",
-  to: "/login"
-}, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-  className: "p-2",
-  to: "/signup"
-}, "Sign Up")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
+}) => {
+  const handleClick = () => {
+    localStorage.removeItem('apollo-token');
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    className: "px-10 w-50 object:contain",
+    src: "https://i.ibb.co/yk2Q8vT/hollabody-long-white.png",
+    border: "0"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "flex justify-between px-10 "
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+    className: "p-2",
+    to: "/"
+  }, "About"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+    className: "p-2",
+    to: "/classes"
+  }, "All Classes")), isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+    className: "p-2",
+    to: "/portfolio"
+  }, "Portfolio"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+    className: "p-2",
+    to: "/transaction"
+  }, "Transaction"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    className: "p-2",
+    href: "#",
+    onClick: handleClick
+  }, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+    className: "p-2",
+    to: "/login"
+  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+    className: "p-2",
+    to: "/signup"
+  }, "Sign Up")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (Navbar);
 /**
@@ -229,11 +238,12 @@ const history =  false ? undefined : Object(history__WEBPACK_IMPORTED_MODULE_0__
 /*!*************************!*\
   !*** ./client/index.js ***!
   \*************************/
-/*! no exports provided */
+/*! exports provided: apolloToken */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apolloToken", function() { return apolloToken; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -250,12 +260,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const apolloToken = localStorage.getItem('apollo-token');
 const client = new apollo_boost__WEBPACK_IMPORTED_MODULE_5__["default"]({
   request: operation => {
-    const token = localStorage.getItem('apollo-token');
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : ''
+        authorization: apolloToken ? `Bearer ${apolloToken}` : ''
       }
     });
   }
@@ -332,14 +342,12 @@ const Login = () => {
     onCompleted({
       signIn
     }) {
-      console.log('onCompleted', signIn.token);
       localStorage.setItem('apollo-token', signIn.token);
       setMutationError('');
       _history__WEBPACK_IMPORTED_MODULE_4__["default"].push('/portfolio');
     },
 
     onError(error) {
-      console.log('ewrwerwe', error);
       setMutationError(error.graphQLErrors[0].message);
     }
 
@@ -481,20 +489,24 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 class Routes extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  componentDidMount() {// this.props.loadInitialData();
+  componentDidMount(props) {// this.props.loadInitialData();
   }
 
   render() {
-    const isLoggedIn = localStorage.getItem('token');
+    const {
+      isLoggedIn
+    } = this.props;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       exact: true,
       path: "/login",
       component: _pages__WEBPACK_IMPORTED_MODULE_4__["Login"]
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+    }), isLoggedIn && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       exact: true,
       path: "/portfolio",
       component: _pages__WEBPACK_IMPORTED_MODULE_4__["Portfolio"]
-    }), " */}");
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+      component: _pages__WEBPACK_IMPORTED_MODULE_4__["Login"]
+    }));
   }
 
 }

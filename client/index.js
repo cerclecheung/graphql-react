@@ -6,12 +6,13 @@ import App from './app';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 
+export const apolloToken = localStorage.getItem('apollo-token');
+
 const client = new ApolloClient({
   request: (operation) => {
-    const token = localStorage.getItem('apollo-token');
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: apolloToken ? `Bearer ${apolloToken}` : '',
       },
     });
   },
