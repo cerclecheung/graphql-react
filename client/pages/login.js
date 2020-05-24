@@ -16,15 +16,21 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [mutationError, setMutationError] = useState('');
 
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
-  const [loginMutation, { error, data }] = useMutation(LOGIN);
-  console.log('error', error);
+  const [loginMutation] = useMutation(LOGIN, {
+    onCompleted({ loginMutation }) {
+      localStorage.setItem('token', loginMutation);
+    },
+    onError(error) {
+      setMutationError(error.graphQLErrors[0].message);
+    },
+  });
 
   const _confirm = () => {
     if (login) {
       loginMutation({ variables: { email, password } });
-      console;
     }
   };
 
@@ -76,6 +82,7 @@ const Login = () => {
             : 'already have an account?'}
         </div>
       </div>
+      {mutationError && <div>{mutationError}</div>}
     </div>
   );
 };

@@ -344,13 +344,21 @@ const Login = () => {
   const [login, setLogin] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('true');
   const [email, setEmail] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
   const [password, setPassword] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
-  const [name, setName] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''); //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
+  const [name, setName] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const [mutationError, setMutationError] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''); //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
 
-  const [loginMutation, {
-    error,
-    data
-  }] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGIN);
-  console.log('error', error);
+  const [loginMutation] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGIN, {
+    onCompleted({
+      loginMutation
+    }) {
+      localStorage.setItem('token', loginMutation);
+    },
+
+    onError(error) {
+      setMutationError(error.graphQLErrors[0].message);
+    }
+
+  });
 
   const _confirm = () => {
     if (login) {
@@ -360,7 +368,6 @@ const Login = () => {
           password
         }
       });
-      console;
     }
   };
 
@@ -396,7 +403,7 @@ const Login = () => {
   }, login ? 'login' : 'create account'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "pointer button",
     onClick: () => setLogin(!login)
-  }, login ? 'need to create an account?' : 'already have an account?')));
+  }, login ? 'need to create an account?' : 'already have an account?')), mutationError && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, mutationError));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(Login));
