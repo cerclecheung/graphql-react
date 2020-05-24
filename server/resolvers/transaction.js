@@ -1,6 +1,7 @@
 import { combineResolvers } from 'graphql-resolvers';
 import { isAuthenticated, isMessageOwner } from './authorization';
-import { Sequelize } from 'sequelize';
+import Sequelize from 'sequelize';
+import axios from 'axios';
 // import pubsub, { EVENTS } from '../subscription';
 
 const toCursorHash = (string) =>
@@ -16,7 +17,6 @@ export default {
       { cursor, limit = 100 },
       { models },
     ) => {
-      console.log('limit', limit);
       const transactions = await models.Transaction.findAll({
         order: [['createdAt', 'DESC']],
         limit: limit + 1,
@@ -42,9 +42,43 @@ export default {
         },
       };
     },
-    // transaction: async (parent, { id }, { models }) => {
-    //   return await models.Transaction.findByPk(id);
-    // },
+
+    portfolio: async (parent, { limit = 100 }, { models }) => {
+      const portfolio = await models.Transaction.findAll({
+        attributes: [
+          'symbol',
+          [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
+        ],
+        group: ['symbol'],
+      });
+
+      const symbols = portfolio.reduce((accu, ele) => {
+        accu.push(ele.symbol);
+        return accu;
+      }, []);
+      const symbolsToString = symbols.join(',');
+      const res = await axios({
+        method: 'get',
+        url: `https://cloud.iexapis.com/v1/stock/market/batch`,
+        // headers: {
+        //   Authorization: `Basic ${idSecret64}`,
+        // },
+        params: {
+          types: 'quote',
+          symbols: symbolsToString,
+          token: process.env.IEX_TOKEN,
+        },
+      });
+      console.log(res);
+
+      // console.log(
+      //   portfolio[0]['symbol'],
+      //   typeof portfolio[0],
+      //   typeof portfolio[0].dataValues['total'],
+      //   Object.keys(portfolio[0].dataValues),
+      // );
+      return portfolio;
+    },
   },
   Mutation: {
     createTransaction: combineResolvers(

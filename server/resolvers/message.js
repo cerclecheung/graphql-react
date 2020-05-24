@@ -1,6 +1,6 @@
 import { combineResolvers } from 'graphql-resolvers';
 import { isAuthenticated, isMessageOwner } from './authorization';
-import { Sequelize } from 'sequelize';
+import Sequelize from 'sequelize';
 import pubsub, { EVENTS } from '../subscription';
 
 const toCursorHash = (string) =>

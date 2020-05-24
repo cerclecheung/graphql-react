@@ -4,16 +4,9 @@ import { gql } from 'apollo-boost';
 
 const readMessages = gql`
   query($limit: Int) {
-    messages(limit: $limit) {
-      edges {
-        user {
-          username
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
+    portfolio(limit: $limit) {
+      symbol
+      total
     }
   }
 `;
@@ -24,11 +17,12 @@ const Portfolio = () => {
   });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  return data.messages.edges.map((msg) => {
-    console.log(msg);
+  return data.portfolio.map((stock) => {
+    console.log(stock);
     return (
-      <div key={msg.id}>
-        <p>{msg.user.username}</p>
+      <div key={stock.symbol}>
+        <span>{stock.symbol}</span>
+        <span>{stock.total}</span>
       </div>
     );
   });

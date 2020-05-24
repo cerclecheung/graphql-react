@@ -64,6 +64,12 @@ async function seed(date) {
       userId: 1,
       price: '15.0',
     }),
+    Transaction.create({
+      symbol: 'AAPL',
+      quantity: 20,
+      userId: 1,
+      price: '30.2',
+    }),
   ]);
 
   console.log(`seeded ${users.length} users`);
