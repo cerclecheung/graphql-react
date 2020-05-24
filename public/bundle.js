@@ -349,12 +349,14 @@ const Login = () => {
 
   const [loginMutation] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGIN, {
     onCompleted({
-      loginMutation
+      signIn
     }) {
-      localStorage.setItem('token', loginMutation);
+      console.log('onCompleted', signIn.token);
+      localStorage.setItem('token', signIn.token);
     },
 
     onError(error) {
+      console.log('ewrwerwe', error);
       setMutationError(error.graphQLErrors[0].message);
     }
 
@@ -375,7 +377,6 @@ const Login = () => {
     localStorage.setItem(AUTH_TOKEN, token);
   };
 
-  console.log(email);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
     className: "mv3"
   }, login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

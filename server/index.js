@@ -1,6 +1,9 @@
 import path from 'path';
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import {
+  ApolloServer,
+  AuthenticationError,
+} from 'apollo-server-express';
 import schema from './schema';
 import resolvers from './resolvers';
 import models, { db } from './db';
@@ -17,11 +20,12 @@ const getMe = async (req) => {
   const token = tokenWithBearer
     ? tokenWithBearer.split(' ')[1]
     : null;
-  console.log('token', token);
+  console.log('token', !!token, token, tokenWithBearer);
   if (token) {
     try {
       return await jwt.verify(token, process.env.SECRET);
     } catch (e) {
+      console.log('here');
       throw new AuthenticationError(
         'Your session expired. Sign in again.',
       );

@@ -20,10 +20,12 @@ const Login = () => {
 
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
   const [loginMutation] = useMutation(LOGIN, {
-    onCompleted({ loginMutation }) {
-      localStorage.setItem('token', loginMutation);
+    onCompleted({ signIn }) {
+      console.log('onCompleted', signIn.token);
+      localStorage.setItem('token', signIn.token);
     },
     onError(error) {
+      console.log('ewrwerwe', error);
       setMutationError(error.graphQLErrors[0].message);
     },
   });
@@ -38,7 +40,6 @@ const Login = () => {
     localStorage.setItem(AUTH_TOKEN, token);
   };
 
-  console.log(email);
   return (
     <div>
       <h4 className="mv3">{login ? 'Login' : 'Sign Up'}</h4>

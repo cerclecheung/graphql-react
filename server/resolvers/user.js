@@ -54,6 +54,7 @@ export default {
       }
 
       const isValid = await user.validatePassword(password);
+      console.log('isvalid', isValid);
 
       if (!isValid) {
         throw new AuthenticationError('Invalid password.');
