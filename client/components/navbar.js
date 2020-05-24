@@ -40,9 +40,6 @@ const Navbar = ({ isLoggedIn }) => {
               <Link className="p-2" to="/login">
                 Login
               </Link>
-              <Link className="p-2" to="/signup">
-                Sign Up
-              </Link>
             </div>
           )}
         </div>

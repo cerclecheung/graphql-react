@@ -26,7 +26,11 @@ const Portfolio = () => {
   if (error) return <p>Error :(</p>;
   return data.messages.edges.map((msg) => {
     console.log(msg);
-    return <div key={msg.id}>{msg.user.username}</div>;
+    return (
+      <div key={msg.id}>
+        <p>{msg.user.username}</p>
+      </div>
+    );
   });
 };
 

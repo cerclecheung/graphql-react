@@ -60,7 +60,7 @@ async function seed(date) {
     }),
     Transaction.create({
       symbol: 'FB',
-      quantity: -10,
+      quantity: 20,
       userId: 1,
       price: '15.0',
     }),
