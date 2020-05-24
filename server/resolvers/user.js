@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 import { combineResolvers } from 'graphql-resolvers';
 import { isAdmin } from './authorization';
+import { AuthenticationError, UserInputError } from 'apollo-server';
 
 const createToken = async (user, secret, expiresIn) => {
   const { id, email, username, role } = user;
@@ -45,6 +45,7 @@ export default {
       { models, secret },
     ) => {
       const user = await models.User.findByLogin(login);
+      console.log('login', login, user);
 
       if (!user) {
         throw new UserInputError(

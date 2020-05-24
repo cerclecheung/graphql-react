@@ -326,77 +326,78 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+/* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/react-hooks */ "./node_modules/@apollo/react-hooks/lib/react-hooks.esm.js");
+/* harmony import */ var apollo_boost__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! apollo-boost */ "./node_modules/apollo-boost/lib/bundle.esm.js");
 
 
- // import { AUTH_TOKEN } from '../constants'
 
-class Login extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor(...args) {
-    super(...args);
 
-    _defineProperty(this, "state", {
-      login: true,
-      // switch between Login and SignUp
-      email: '',
-      password: '',
-      name: ''
-    });
-
-    _defineProperty(this, "_confirm", async () => {// ... you'll implement this 🔜
-    });
-
-    _defineProperty(this, "_saveUserData", token => {
-      localStorage.setItem(AUTH_TOKEN, token);
-    });
+const LOGIN = apollo_boost__WEBPACK_IMPORTED_MODULE_3__["gql"]`
+  mutation Login($email: String!, $password: String!) {
+    signIn(login: $email, password: $password) {
+      token
+    }
   }
+`;
 
-  render() {
-    const {
-      login,
-      email,
-      password,
-      name
-    } = this.state;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
-      className: "mv3"
-    }, login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "flex flex-column"
-    }, !login && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      value: name,
-      onChange: e => this.setState({
-        name: e.target.value
-      }),
-      type: "text",
-      placeholder: "Your name"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      value: email,
-      onChange: e => this.setState({
-        email: e.target.value
-      }),
-      type: "text",
-      placeholder: "Your email address"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      value: password,
-      onChange: e => this.setState({
-        password: e.target.value
-      }),
-      type: "password",
-      placeholder: "Choose a safe password"
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "flex mt3"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "pointer mr2 button",
-      onClick: () => this._confirm()
-    }, login ? 'login' : 'create account'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "pointer button",
-      onClick: () => this.setState({
-        login: !login
-      })
-    }, login ? 'need to create an account?' : 'already have an account?')));
-  }
+const Login = () => {
+  const [login, setLogin] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('true');
+  const [email, setEmail] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const [password, setPassword] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const [name, setName] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''); //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
 
-}
+  const [loginMutation, {
+    error,
+    data
+  }] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGIN);
+  console.log('error', error);
+
+  const _confirm = () => {
+    if (login) {
+      loginMutation({
+        variables: {
+          email,
+          password
+        }
+      });
+      console;
+    }
+  };
+
+  const _saveUserData = token => {
+    localStorage.setItem(AUTH_TOKEN, token);
+  };
+
+  console.log(email);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+    className: "mv3"
+  }, login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "flex flex-column"
+  }, !login && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    value: name,
+    onChange: e => setName(e.target.value),
+    type: "text",
+    placeholder: "Your name"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    value: email,
+    onChange: e => setEmail(e.target.value),
+    type: "text",
+    placeholder: login ? 'Your username or email' : 'Your email address'
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    value: password,
+    onChange: e => setPassword(e.target.value),
+    type: "password",
+    placeholder: "Choose a safe password"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "flex mt3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "pointer mr2 button",
+    onClick: () => _confirm()
+  }, login ? 'login' : 'create account'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "pointer button",
+    onClick: () => setLogin(!login)
+  }, login ? 'need to create an account?' : 'already have an account?')));
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(Login));
 
@@ -499,7 +500,7 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     } = this.props;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       exact: true,
-      path: "/",
+      path: "/login",
       component: _pages__WEBPACK_IMPORTED_MODULE_4__["Login"]
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       exact: true,

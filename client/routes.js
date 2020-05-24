@@ -20,7 +20,7 @@ class Routes extends Component {
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
-        <Route exact path="/" component={Login} />
+        <Route exact path="/login" component={Login} />
         <Route exact path="/portfolio" component={Portfolio} />
         {/* <Route path="/signup" component={Signup} /> */}
         {/* <Route exact path="/classes" component={EventListing} /> */}
