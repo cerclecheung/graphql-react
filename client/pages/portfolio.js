@@ -3,19 +3,25 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
 const readMessages = gql`
-  query {
-    messages {
+  query($limit: Int) {
+    messages(limit: $limit) {
       edges {
         user {
           username
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
 `;
 
 const Portfolio = () => {
-  const { loading, error, data } = useQuery(readMessages);
+  const { loading, error, data } = useQuery(readMessages, {
+    variables: { limit: 2 },
+  });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return data.messages.edges.map((msg) => {
