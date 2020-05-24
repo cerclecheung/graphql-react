@@ -45,8 +45,6 @@ export default {
       { models, secret },
     ) => {
       const user = await models.User.findByLogin(login);
-      console.log('login', login, user);
-
       if (!user) {
         throw new UserInputError(
           'No user found with this login credentials.',
@@ -54,8 +52,6 @@ export default {
       }
 
       const isValid = await user.validatePassword(password);
-      console.log('isvalid', isValid);
-
       if (!isValid) {
         throw new AuthenticationError('Invalid password.');
       }

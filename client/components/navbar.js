@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 // import { logout } from '../store';
 
 const Navbar = ({ handleClick, isLoggedIn }) => (
-  <div className="bg-green-500 text-gray-100 p-2">
-    {/* <h1 className="text-2xl px-20"> HollaBody</h1> */}
+  <div>
     <img
       className="px-10 w-50 object:contain"
       src="https://i.ibb.co/yk2Q8vT/hollabody-long-white.png"

@@ -20,12 +20,10 @@ const getMe = async (req) => {
   const token = tokenWithBearer
     ? tokenWithBearer.split(' ')[1]
     : null;
-  console.log('token', !!token, token, tokenWithBearer);
   if (token) {
     try {
       return await jwt.verify(token, process.env.SECRET);
     } catch (e) {
-      console.log('here');
       throw new AuthenticationError(
         'Your session expired. Sign in again.',
       );

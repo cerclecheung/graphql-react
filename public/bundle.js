@@ -152,9 +152,7 @@ __webpack_require__.r(__webpack_exports__);
 const Navbar = ({
   handleClick,
   isLoggedIn
-}) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-  className: "bg-green-500 text-gray-100 p-2"
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+}) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
   className: "px-10 w-50 object:contain",
   src: "https://i.ibb.co/yk2Q8vT/hollabody-long-white.png",
   border: "0"
@@ -245,36 +243,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app */ "./client/app.js");
 /* harmony import */ var apollo_boost__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! apollo-boost */ "./node_modules/apollo-boost/lib/bundle.esm.js");
 /* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @apollo/react-hooks */ "./node_modules/@apollo/react-hooks/lib/react-hooks.esm.js");
-/* harmony import */ var apollo_link_http__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! apollo-link-http */ "./node_modules/apollo-link-http/lib/bundle.esm.js");
-/* harmony import */ var apollo_link_context__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! apollo-link-context */ "./node_modules/apollo-link-context/lib/bundle.esm.js");
-/* harmony import */ var apollo_cache_inmemory__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! apollo-cache-inmemory */ "./node_modules/apollo-cache-inmemory/lib/bundle.esm.js");
 
 
 
 
 
 
-
-
-
- // const httpLink = createHttpLink({
-//   uri: '/graphql',
-// });
-// const authLink = setContext((_, { headers }) => {
-//   // get the authentication token from local storage if it exists
-//   const token = localStorage.getItem('token');
-//   // return the headers to the context so httpLink can read them
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Bearer ${token}` : '',
-//     },
-//   };
-// });
 
 const client = new apollo_boost__WEBPACK_IMPORTED_MODULE_5__["default"]({
   request: operation => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('apollo-token');
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : ''
@@ -328,6 +306,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/react-hooks */ "./node_modules/@apollo/react-hooks/lib/react-hooks.esm.js");
 /* harmony import */ var apollo_boost__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! apollo-boost */ "./node_modules/apollo-boost/lib/bundle.esm.js");
+/* harmony import */ var _history__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../history */ "./client/history.js");
+
 
 
 
@@ -348,11 +328,14 @@ const Login = () => {
   const [mutationError, setMutationError] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''); //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
 
   const [loginMutation] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGIN, {
+    //   onCompleted takes in the gql result
     onCompleted({
       signIn
     }) {
       console.log('onCompleted', signIn.token);
-      localStorage.setItem('token', signIn.token);
+      localStorage.setItem('apollo-token', signIn.token);
+      setMutationError('');
+      _history__WEBPACK_IMPORTED_MODULE_4__["default"].push('/portfolio');
     },
 
     onError(error) {
@@ -364,6 +347,7 @@ const Login = () => {
 
   const _confirm = () => {
     if (login) {
+      localStorage.removeItem('apollo-token');
       loginMutation({
         variables: {
           email,
@@ -377,9 +361,7 @@ const Login = () => {
     localStorage.setItem(AUTH_TOKEN, token);
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
-    className: "mv3"
-  }, login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "flex flex-column"
   }, !login && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     value: name,
@@ -503,9 +485,7 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   render() {
-    const {
-      isLoggedIn
-    } = this.props;
+    const isLoggedIn = localStorage.getItem('token');
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       exact: true,
       path: "/login",
@@ -14861,51 +14841,6 @@ var ApolloClient = (function () {
 }());
 
 /* harmony default export */ __webpack_exports__["default"] = (ApolloClient);
-
-//# sourceMappingURL=bundle.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/apollo-link-context/lib/bundle.esm.js":
-/*!************************************************************!*\
-  !*** ./node_modules/apollo-link-context/lib/bundle.esm.js ***!
-  \************************************************************/
-/*! exports provided: setContext */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setContext", function() { return setContext; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var apollo_link__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apollo-link */ "./node_modules/apollo-link/lib/bundle.esm.js");
-
-
-
-function setContext(setter) {
-    return new apollo_link__WEBPACK_IMPORTED_MODULE_1__["ApolloLink"](function (operation, forward) {
-        var request = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(operation, []);
-        return new apollo_link__WEBPACK_IMPORTED_MODULE_1__["Observable"](function (observer) {
-            var handle;
-            Promise.resolve(request)
-                .then(function (req) { return setter(req, operation.getContext()); })
-                .then(operation.setContext)
-                .then(function () {
-                handle = forward(operation).subscribe({
-                    next: observer.next.bind(observer),
-                    error: observer.error.bind(observer),
-                    complete: observer.complete.bind(observer),
-                });
-            })
-                .catch(observer.error.bind(observer));
-            return function () {
-                if (handle)
-                    handle.unsubscribe();
-            };
-        });
-    });
-}
-
 
 //# sourceMappingURL=bundle.esm.js.map
 
