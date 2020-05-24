@@ -2,13 +2,13 @@ import React from 'react';
 
 import { Navbar } from './components';
 import Routes from './routes';
-const isLoggedIn = localStorage.getItem('apollo-token');
+import { apolloToken } from './index';
 const App = () => {
   return (
     <div>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar isLoggedIn={!!apolloToken} />
       <Routes
-        isLoggedIn={isLoggedIn}
+        isLoggedIn={!!apolloToken}
         className="flex justify-center self-center"
       />
     </div>

@@ -19,21 +19,15 @@ class Routes extends Component {
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
-        <Route exact path="/login" component={Login} />
-        {/* <Route path="/signup" component={Signup} /> */}
-        {/* <Route exact path="/classes" component={EventListing} /> */}
-        {/* <Route path="/teachers/:teacherHash" component={HerProfile} /> */}
-        {isLoggedIn && (
+        {/* <Route exact path="/login" component={Login} /> */}
+        {isLoggedIn ? (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route exact path="/portfolio" component={Portfolio} />
-            {/* <Route path="/classes/create" component={CreateEvent} />
-            <Route
-              path="/classes/:eventHash/edit"
-              component={EditEvent}
-            />
-            <Route path="/me/bio" component={MyBio} />
-        // <Route path="/me/classes" component={MyClassListing} />*/}
+          </Switch>
+        ) : (
+          <Switch>
+            <Route exact path="/login" component={Login} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}

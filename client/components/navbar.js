@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 // import { logout } from '../store';
 
 const Navbar = ({ isLoggedIn }) => {
-  const handleClick = () => {
+  const handleLogOut = () => {
     localStorage.removeItem('apollo-token');
   };
   return (
@@ -21,9 +21,6 @@ const Navbar = ({ isLoggedIn }) => {
             <Link className="p-2" to="/">
               About
             </Link>
-            <Link className="p-2" to="/classes">
-              All Classes
-            </Link>
           </div>
           {isLoggedIn ? (
             <div>
@@ -34,7 +31,7 @@ const Navbar = ({ isLoggedIn }) => {
               <Link className="p-2" to="/transaction">
                 Transaction
               </Link>
-              <a className="p-2" href="#" onClick={handleClick}>
+              <a className="p-2" href="#" onClick={handleLogOut}>
                 Logout
               </a>
             </div>
