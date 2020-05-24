@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Portfolio } from './pages';
+import { Portfolio, Login } from './pages';
 
 // import { me } from './store';
 
@@ -10,35 +10,28 @@ import { Portfolio } from './pages';
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount() {
+  componentDidMount(props) {
     // this.props.loadInitialData();
   }
 
   render() {
     const { isLoggedIn } = this.props;
-
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
-        <Route exact path="/" component={Portfolio} />
-        {/* <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route exact path="/classes" component={EventListing} />
-        <Route path="/teachers/:teacherHash" component={HerProfile} />
-        {isLoggedIn && (
+        {/* <Route exact path="/login" component={Login} /> */}
+        {isLoggedIn ? (
           <Switch>
             {/* Routes placed here are only available after logging in */}
-        {/* <Route path="/classes/create" component={CreateEvent} />
-            <Route
-              path="/classes/:eventHash/edit"
-              component={EditEvent}
-            />
-            <Route path="/me/bio" component={MyBio} />
-            <Route path="/me/classes" component={MyClassListing} />
+            <Route exact path="/portfolio" component={Portfolio} />
           </Switch>
-        )} */}
+        ) : (
+          <Switch>
+            <Route exact path="/login" component={Login} />
+          </Switch>
+        )}
         {/* Displays our Login component as a fallback */}
-        {/*  <Route component={EventListing} /> */} */}
+        <Route component={Login} />
       </Switch>
     );
   }

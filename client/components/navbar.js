@@ -4,52 +4,53 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 // import { logout } from '../store';
 
-const Navbar = ({ handleClick, isLoggedIn }) => (
-  <div className="bg-green-500 text-gray-100 p-2">
-    {/* <h1 className="text-2xl px-20"> HollaBody</h1> */}
-    <img
-      className="px-10 w-50 object:contain"
-      src="https://i.ibb.co/yk2Q8vT/hollabody-long-white.png"
-      border="0"
-    />
-    <nav>
-      <div className="flex justify-between px-10 ">
-        {/* The navbar will show these links after you log in */}
-        <div>
-          <Link className="p-2" to="/">
-            About
-          </Link>
-          <Link className="p-2" to="/classes">
-            All Classes
-          </Link>
+const Navbar = ({ isLoggedIn }) => {
+  const handleLogOut = () => {
+    localStorage.removeItem('apollo-token');
+  };
+  return (
+    <div>
+      <img
+        className="px-10 w-50 object:contain"
+        src="https://i.ibb.co/yk2Q8vT/hollabody-long-white.png"
+        border="0"
+      />
+      <nav>
+        <div className="flex justify-between px-10 ">
+          <div>
+            <Link className="p-2" to="/">
+              About
+            </Link>
+          </div>
+          {isLoggedIn ? (
+            <div>
+              {/* The navbar will show these links after you log in */}
+              <Link className="p-2" to="/portfolio">
+                Portfolio
+              </Link>
+              <Link className="p-2" to="/transaction">
+                Transaction
+              </Link>
+              <a className="p-2" href="#" onClick={handleLogOut}>
+                Logout
+              </a>
+            </div>
+          ) : (
+            <div>
+              <Link className="p-2" to="/login">
+                Login
+              </Link>
+              <Link className="p-2" to="/signup">
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
-        {isLoggedIn ? (
-          <div>
-            <Link className="p-2" to="/me/bio">
-              Me
-            </Link>
-            <Link className="p-2" to="/me/classes">
-              My Class
-            </Link>
-            <a className="p-2" href="#" onClick={handleClick}>
-              Logout
-            </a>
-          </div>
-        ) : (
-          <div>
-            <Link className="p-2" to="/login">
-              Login
-            </Link>
-            <Link className="p-2" to="/signup">
-              Sign Up
-            </Link>
-          </div>
-        )}
-      </div>
-    </nav>
-    <hr />
-  </div>
-);
+      </nav>
+      <hr />
+    </div>
+  );
+};
 
 export default Navbar;
 
