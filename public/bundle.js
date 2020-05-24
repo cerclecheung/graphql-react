@@ -329,12 +329,23 @@ const LOGIN = apollo_boost__WEBPACK_IMPORTED_MODULE_3__["gql"]`
     }
   }
 `;
+const SIGNUP = apollo_boost__WEBPACK_IMPORTED_MODULE_3__["gql"]`
+  mutation SignUp(
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    signUp(username: $username, email: $email, password: $password) {
+      token
+    }
+  }
+`;
 
 const Login = () => {
   const [login, setLogin] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('true');
   const [email, setEmail] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
   const [password, setPassword] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
-  const [name, setName] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const [username, setUsername] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
   const [mutationError, setMutationError] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''); //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
 
   const [loginMutation] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGIN, {
@@ -352,10 +363,26 @@ const Login = () => {
     }
 
   });
+  const [signUpMutation] = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(SIGNUP, {
+    //   onCompleted takes in the gql result
+    onCompleted({
+      signUp
+    }) {
+      localStorage.setItem('apollo-token', signUp.token);
+      setMutationError('');
+      _history__WEBPACK_IMPORTED_MODULE_4__["default"].push('/portfolio');
+    },
+
+    onError(error) {
+      setMutationError(error.graphQLErrors[0].message);
+    }
+
+  });
 
   const _confirm = () => {
+    localStorage.removeItem('apollo-token');
+
     if (login) {
-      localStorage.removeItem('apollo-token');
       loginMutation({
         variables: {
           email,
@@ -363,6 +390,14 @@ const Login = () => {
         }
       });
     }
+
+    signUpMutation({
+      variables: {
+        username,
+        email,
+        password
+      }
+    });
   };
 
   const _saveUserData = token => {
@@ -372,8 +407,8 @@ const Login = () => {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "flex flex-column"
   }, !login && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-    value: name,
-    onChange: e => setName(e.target.value),
+    value: username,
+    onChange: e => setUsername(e.target.value),
     type: "text",
     placeholder: "Your name"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {

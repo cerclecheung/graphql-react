@@ -12,11 +12,23 @@ const LOGIN = gql`
   }
 `;
 
+const SIGNUP = gql`
+  mutation SignUp(
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    signUp(username: $username, email: $email, password: $password) {
+      token
+    }
+  }
+`;
+
 const Login = () => {
   const [login, setLogin] = useState('true');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [mutationError, setMutationError] = useState('');
 
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
@@ -32,11 +44,24 @@ const Login = () => {
     },
   });
 
+  const [signUpMutation] = useMutation(SIGNUP, {
+    //   onCompleted takes in the gql result
+    onCompleted({ signUp }) {
+      localStorage.setItem('apollo-token', signUp.token);
+      setMutationError('');
+      history.push('/portfolio');
+    },
+    onError(error) {
+      setMutationError(error.graphQLErrors[0].message);
+    },
+  });
+
   const _confirm = () => {
+    localStorage.removeItem('apollo-token');
     if (login) {
-      localStorage.removeItem('apollo-token');
       loginMutation({ variables: { email, password } });
     }
+    signUpMutation({ variables: { username, email, password } });
   };
 
   const _saveUserData = (token) => {
@@ -49,8 +74,8 @@ const Login = () => {
       <div className="flex flex-column">
         {!login && (
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             type="text"
             placeholder="Your name"
           />
