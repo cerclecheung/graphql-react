@@ -31,7 +31,8 @@ export default gql`
   type Stock {
     symbol: String!
     # price: Float!
-    total: String!
+    totalQuantity: Int!
+    value: Float!
     # user: User!
   }
   # extend type Subscription {

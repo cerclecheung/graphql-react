@@ -6,7 +6,8 @@ const readMessages = gql`
   query($limit: Int) {
     portfolio(limit: $limit) {
       symbol
-      total
+      totalQuantity
+      value
     }
   }
 `;
@@ -18,11 +19,12 @@ const Portfolio = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return data.portfolio.map((stock) => {
-    console.log(stock);
     return (
       <div key={stock.symbol}>
         <span>{stock.symbol}</span>
-        <span>{stock.total}</span>
+        <span> - </span>
+        <span>{`${stock.totalQuantity} shares `}</span>
+        <span>{`$${stock.value}`}</span>
       </div>
     );
   });

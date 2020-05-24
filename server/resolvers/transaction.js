@@ -1,8 +1,7 @@
 import { combineResolvers } from 'graphql-resolvers';
 import { isAuthenticated, isMessageOwner } from './authorization';
-import Sequelize from 'sequelize';
+import Sequelize, { INTEGER } from 'sequelize';
 import axios from 'axios';
-// import pubsub, { EVENTS } from '../subscription';
 
 const toCursorHash = (string) =>
   Buffer.from(string).toString('base64');
@@ -44,7 +43,7 @@ export default {
     },
 
     portfolio: async (parent, { limit = 100 }, { models }) => {
-      const portfolio = await models.Transaction.findAll({
+      const transactionSum = await models.Transaction.findAll({
         attributes: [
           'symbol',
           [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
@@ -52,31 +51,38 @@ export default {
         group: ['symbol'],
       });
 
-      const symbols = portfolio.reduce((accu, ele) => {
+      const symbols = transactionSum.reduce((accu, ele) => {
         accu.push(ele.symbol);
         return accu;
       }, []);
       const symbolsToString = symbols.join(',');
-      const res = await axios({
+      const { data } = await axios({
         method: 'get',
         url: `https://cloud.iexapis.com/v1/stock/market/batch`,
-        // headers: {
-        //   Authorization: `Basic ${idSecret64}`,
-        // },
         params: {
           types: 'quote',
           symbols: symbolsToString,
           token: process.env.IEX_TOKEN,
         },
       });
-      console.log(res);
+      const portfolio = transactionSum.reduce((accu, ele) => {
+        const q = data[ele.symbol].quote;
+        const total = parseInt(ele.dataValues['total'], 10);
+        accu.push({
+          symbol: ele.symbol,
+          totalQuantity: total,
+          value: (q.latestPrice * total).toFixed(2),
+          color:
+            q.open > q.latestPrice
+              ? 'red'
+              : q.open === q.latestPrice
+              ? 'grey'
+              : 'green',
+        });
+        return accu;
+      }, []);
 
-      // console.log(
-      //   portfolio[0]['symbol'],
-      //   typeof portfolio[0],
-      //   typeof portfolio[0].dataValues['total'],
-      //   Object.keys(portfolio[0].dataValues),
-      // );
+      console.log('portfolio', portfolio);
       return portfolio;
     },
   },
@@ -88,21 +94,9 @@ export default {
           text,
           userId: me.id,
         });
-        // publishing to events.message.created
-
-        // pubsub.publish(EVENTS.MESSAGE.CREATED, {
-        //   transationCreated: { transation },
-        // });
         return transaction;
       },
     ),
-
-    // deleteMessage: combineResolvers(
-    //   isMessageOwner,
-    //   async (parent, { id }, { models }) => {
-    //     return await models.Message.destroy({ where: { id } });
-    //   },
-    // ),
   },
 
   Transaction: {
@@ -110,9 +104,4 @@ export default {
       return await models.User.findByPk(message.userId);
     },
   },
-  // Subscription: {
-  //   messageCreated: {
-  //     subscribe: () => pubsub.asyncIterator(EVENTS.MESSAGE.CREATED),
-  //   },
-  // },
 };
