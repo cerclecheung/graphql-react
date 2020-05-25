@@ -13,43 +13,17 @@ async function seed(date) {
   console.log('db synced!');
 
   const users = await Promise.all([
-    User.create(
-      {
-        username: 'rwieruch',
-        email: 'hello@robin.com',
-        password: 'rwieruch',
-        role: 'admin',
-        messages: [
-          {
-            text: 'Published the Road to learn React',
-            // createdAt: date.setSeconds(date.getSeconds() + 1),
-          },
-        ],
-      },
-      {
-        include: [Message],
-      },
-    ),
-    User.create(
-      {
-        username: 'ddavids',
-        email: 'hello@david.com',
-        password: 'ddavids',
-        messages: [
-          {
-            text: 'Happy to release ...',
-            // createdAt: date.setSeconds(date.getSeconds() + 1),
-          },
-          {
-            text: 'Published a complete ...',
-            // createdAt: date.setSeconds(date.getSeconds() + 1),
-          },
-        ],
-      },
-      {
-        include: [Message],
-      },
-    ),
+    User.create({
+      username: 'rwieruch',
+      email: 'hello@robin.com',
+      password: 'rwieruch',
+      role: 'admin',
+    }),
+    User.create({
+      username: 'ddavids',
+      email: 'hello@david.com',
+      password: 'ddavids',
+    }),
   ]);
   const transactions = await Promise.all([
     Transaction.create({

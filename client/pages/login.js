@@ -32,15 +32,14 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [mutationError, setMutationError] = useState('');
 
-  const { handleLogin } = useContext(UserContext);
+  const { setTokenInStorageAndState } = useContext(UserContext);
 
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
   const [loginMutation] = useMutation(LOGIN, {
     //   onCompleted takes in the gql result
     onCompleted({ signIn }) {
       //   console.log('signIn:', signIn.token);
-      handleLogin(signIn.token);
-      setMutationError('');
+      setTokenInStorageAndState(signIn.token);
       history.push('/portfolio');
     },
     onError(error) {
@@ -52,8 +51,7 @@ const Login = () => {
   const [signUpMutation] = useMutation(SIGNUP, {
     //   onCompleted takes in the gql result
     onCompleted({ signUp }) {
-      localStorage.setItem('apollo-token', signUp.token);
-      setMutationError('');
+      setTokenInStorageAndState(signUp.token);
       history.push('/portfolio');
     },
     onError(error) {

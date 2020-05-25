@@ -61,7 +61,7 @@ export default {
 
       // in case there is not purchase yet, it shouldn;t be reduced
       if (!transactionSum[0]) {
-        return transactionSum;
+        return [];
       }
 
       const symbols = transactionSum.reduce((accu, ele) => {
@@ -118,19 +118,22 @@ export default {
           console.log(error);
         }
         const { open, latestPrice } = res.quote;
+
         // handle market not yet open
-        if (!open) {
-          throw new UserInputError(
-            'Please make request when market is open',
-          );
-        }
+        // if (!open) {
+        //   throw new UserInputError(
+        //     'Please make request when market is open',
+        //   );
+        // }
         const totalCost = latestPrice * quantity;
+        console.log(latestPrice);
         console.log('totalCost', totalCost);
 
         const buyer = await models.User.findByPk(me.id);
 
         //handle balance insufficiency
         if (buyer.balance < totalCost) {
+          console.log(buyer.balance);
           throw new UserInputError('Not enought balance');
         }
         const transaction = await models.Transaction.create({

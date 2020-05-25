@@ -7,7 +7,7 @@ export const UserProvider = (props) => {
     localStorage.getItem('apollo-token'),
   );
 
-  const handleLogin = (token) => {
+  const setTokenInStorageAndState = (token) => {
     localStorage.setItem('apollo-token', token);
     setToken(token);
   };
@@ -19,7 +19,7 @@ export const UserProvider = (props) => {
 
   return (
     <UserContext.Provider
-      value={{ apolloToken, handleLogin, handleLogOut }}
+      value={{ apolloToken, setTokenInStorageAndState, handleLogOut }}
     >
       {props.children}
     </UserContext.Provider>
