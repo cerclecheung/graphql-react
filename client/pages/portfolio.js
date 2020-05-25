@@ -35,7 +35,7 @@ const Portfolio = () => {
       ) : (
         <div>You haven't bought any stock yet</div>
       )}
-      <Purchase></Purchase>
+      <Purchase balance={50000}></Purchase>
     </div>
   );
 };

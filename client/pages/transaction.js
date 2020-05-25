@@ -25,18 +25,23 @@ const Transaction = () => {
   });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  return data.transactions.edges.length ? (
+  return (
     <div>
-      {data.transactions.edges.map((t) => (
-        <div key={t.id}>
-          <span>{`Buy (${t.symbol})`}</span>
-          <span>{`  ${t.quantity} shares`}</span>
-          <span>{`  @$${t.price}`}</span>
+      <div>TRANSACTION</div>
+      {data.transactions.edges.length ? (
+        <div>
+          {data.transactions.edges.map((t) => (
+            <div key={t.id}>
+              <span>{`Buy (${t.symbol})`}</span>
+              <span>{`  ${t.quantity} shares`}</span>
+              <span>{`  @$${t.price}`}</span>
+            </div>
+          ))}
         </div>
-      ))}
+      ) : (
+        <div>No transaction record</div>
+      )}
     </div>
-  ) : (
-    <div>No transaction record</div>
   );
 };
 

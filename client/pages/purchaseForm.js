@@ -12,11 +12,10 @@ const LOGIN = gql`
   }
 `;
 
-const Purchase = () => {
-  const [login, setLogin] = useState('true');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
+const Purchase = ({ balance }) => {
+  const [userBalance, setUserBalance] = useState(balance);
+  const [ticker, setTicker] = useState('');
+  const [quantity, setQuantity] = useState(0);
   const [mutationError, setMutationError] = useState('');
 
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
@@ -46,45 +45,25 @@ const Purchase = () => {
 
   return (
     <div>
-      <h4>{}</h4>
-      <div className="flex flex-column">
-        {!login && (
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            type="text"
-            placeholder="Your name"
-          />
-        )}
+      <h4>{`Cash - $${userBalance}`}</h4>
+      <div className="">
         <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={ticker}
+          onChange={(e) => setTicker(e.target.value)}
           type="text"
-          placeholder={
-            login ? 'Your username or email' : 'Your email address'
-          }
+          placeholder="Ticker"
         />
         <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Choose a safe password"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          type="number"
+          min="0"
+          placeholder="Number of shares"
         />
       </div>
-      <div className="flex mt3">
-        <div
-          className="pointer mr2 button"
-          onClick={() => _confirm()}
-        >
-          {login ? 'login' : 'create account'}
-        </div>
-        <div
-          className="pointer button"
-          onClick={() => setLogin(!login)}
-        >
-          {login
-            ? 'need to create an account?'
-            : 'already have an account?'}
+      <div className="">
+        <div className="" onClick={() => _confirm()}>
+          Buy
         </div>
       </div>
       {mutationError && <div>{mutationError}</div>}
