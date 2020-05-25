@@ -29,6 +29,10 @@ const user = (db, DataTypes) => {
     role: {
       type: DataTypes.STRING,
     },
+    balance: {
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 5000.0,
+    },
   });
 
   //   associations

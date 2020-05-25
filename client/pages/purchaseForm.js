@@ -14,7 +14,7 @@ const LOGIN = gql`
 
 const Purchase = ({ balance }) => {
   const [userBalance, setUserBalance] = useState(balance);
-  const [ticker, setTicker] = useState('');
+  const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [mutationError, setMutationError] = useState('');
 
@@ -48,8 +48,8 @@ const Purchase = ({ balance }) => {
       <h4>{`Cash - $${userBalance}`}</h4>
       <div className="">
         <input
-          value={ticker}
-          onChange={(e) => setTicker(e.target.value)}
+          value={symbol}
+          onChange={(e) => setSymbol(e.target.value)}
           type="text"
           placeholder="Ticker"
         />
@@ -62,7 +62,11 @@ const Purchase = ({ balance }) => {
         />
       </div>
       <div className="">
-        <div className="" onClick={() => _confirm()}>
+        {/* rember to control the ticker and quantity input and disable button */}
+        <div
+          className="pointer mr2 button"
+          onClick={() => _confirm()}
+        >
           Buy
         </div>
       </div>

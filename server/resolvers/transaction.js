@@ -2,6 +2,7 @@ import { combineResolvers } from 'graphql-resolvers';
 import { isAuthenticated, isMessageOwner } from './authorization';
 import Sequelize, { INTEGER } from 'sequelize';
 import axios from 'axios';
+import { UserInputError } from 'apollo-server';
 
 const toCursorHash = (string) =>
   Buffer.from(string).toString('base64');
@@ -100,12 +101,31 @@ export default {
   Mutation: {
     createTransaction: combineResolvers(
       isAuthenticated,
-      async (parent, { text }, { me, models }) => {
-        const transaction = await models.Transaction.create({
-          text,
-          userId: me.id,
-        });
-        return transaction;
+      async (parent, { symbol, quantity }, { me, models }) => {
+        try {
+          const { data } = await axios({
+            method: 'get',
+            url: `https://cloud.iexapis.com/v1/stock/${symbol}/batch`,
+            params: {
+              types: 'quote',
+              token: process.env.IEX_TOKEN,
+            },
+          });
+          const currentPrice = data[symbol].quote.latestPrice;
+
+          //handle  balance insufficiency
+          if (me.balance < currentPrice * quantity) {
+            throw new UserInputError('Not enought balance');
+          }
+          const transaction = await models.Transaction.create({
+            text,
+            userId: me.id,
+          });
+          return transaction;
+        } catch (error) {
+          // handle ticker error
+          console.log(error);
+        }
       },
     ),
   },
