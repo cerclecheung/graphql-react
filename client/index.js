@@ -16,6 +16,13 @@ const client = new ApolloClient({
       },
     });
   },
+  onError: ({ graphQLErrors, networkError }) => {
+    console.log(graphQLErrors, networkError);
+    if (graphQLErrors[0].extensions.code === 'UNAUTHENTICATED') {
+      localStorage.removeItem('apollo-token');
+      history.push('/login');
+    }
+  },
 });
 // establishes socket connection
 // import './socket';

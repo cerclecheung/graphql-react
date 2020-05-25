@@ -25,7 +25,7 @@ const Transaction = () => {
   });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  return (
+  return data.transactions.edges.length ? (
     <div>
       {data.transactions.edges.map((t) => (
         <div key={t.id}>
@@ -35,6 +35,8 @@ const Transaction = () => {
         </div>
       ))}
     </div>
+  ) : (
+    <div>No transaction record</div>
   );
 };
 

@@ -70,10 +70,9 @@ export default Navbar;
 
 // export default connect(mapState, mapDispatch)(Navbar);
 
-// /**
-//  * PROP TYPES
-//  */
-// Navbar.propTypes = {
-//   handleClick: PropTypes.func.isRequired,
-//   isLoggedIn: PropTypes.bool.isRequired,
-// };
+/**
+ * PROP TYPES
+ */
+Navbar.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+};

@@ -17,7 +17,7 @@ export default gql`
 
   type TransactionPageInfo {
     hasNextPage: Boolean!
-    endCursor: String!
+    endCursor: String
   }
 
   type Transaction {

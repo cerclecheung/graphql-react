@@ -14,7 +14,7 @@ export default {
     transactions: async (
       parent,
       { cursor, limit = 100 },
-      { models },
+      { models, me },
     ) => {
       const transactions = await models.Transaction.findAll({
         order: [['createdAt', 'DESC']],
@@ -24,32 +24,44 @@ export default {
               createdAt: {
                 [Sequelize.Op.lt]: fromCursorHash(cursor),
               },
+              userId: me.id,
             }
-          : null,
+          : { userId: me.id },
       });
       const hasNextPage = transactions.length > limit;
       const edges = hasNextPage
         ? transactions.slice(0, -1)
         : transactions;
+      console.log('hasNextPage', hasNextPage);
       return {
         edges: edges,
         transactionPageInfo: {
           hasNextPage,
-          endCursor: toCursorHash(
-            edges[edges.length - 1].createdAt.toString(),
-          ),
+          endCursor: transactions.length
+            ? toCursorHash(
+                edges[edges.length - 1].createdAt.toString(),
+              )
+            : null,
         },
       };
     },
 
-    portfolio: async (parent, { limit = 100 }, { models }) => {
+    portfolio: async (parent, { limit = 100 }, { models, me }) => {
       const transactionSum = await models.Transaction.findAll({
+        where: {
+          userId: me.id,
+        },
         attributes: [
           'symbol',
           [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
         ],
         group: ['symbol'],
       });
+
+      // in case there is not purchase yet, it shouldn;t be reduced
+      if (!transactionSum[0]) {
+        return transactionSum;
+      }
 
       const symbols = transactionSum.reduce((accu, ele) => {
         accu.push(ele.symbol);
@@ -82,7 +94,6 @@ export default {
         return accu;
       }, []);
 
-      console.log('portfolio', portfolio);
       return portfolio;
     },
   },
