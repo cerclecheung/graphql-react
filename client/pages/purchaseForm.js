@@ -25,12 +25,12 @@ const Purchase = ({ balance }) => {
   const [createMutation] = useMutation(CREATE_TRANSACTION, {
     //   onCompleted takes in the gql result
     onCompleted({ createTransaction }) {
-      console.log('complete');
+      console.log('complete', createTransaction);
       setMutationError('');
       setUserBalance(createTransaction.user.balance);
     },
     onError(error) {
-      console.log(error);
+      console.error();
       setMutationError(error.graphQLErrors[0].message);
     },
   });
@@ -43,7 +43,7 @@ const Purchase = ({ balance }) => {
   const _saveUserData = (token) => {
     localStorage.setItem(AUTH_TOKEN, token);
   };
-  console.log(quantity);
+
   return (
     <div>
       <h4>{`Cash - $${userBalance}`}</h4>

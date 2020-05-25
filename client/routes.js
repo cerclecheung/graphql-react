@@ -1,46 +1,35 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Portfolio, Login, Transaction } from './pages';
-
-// import { me } from './store';
+import { UserContext } from './context';
 
 /**
  * COMPONENT
  */
-class Routes extends Component {
-  componentDidMount(props) {
-    // this.props.loadInitialData();
-  }
-
-  render() {
-    const { isLoggedIn } = this.props;
-    return (
-      <Switch>
-        {/* Routes placed here are available to all visitors */}
-        {/* <Route exact path="/login" component={Login} /> */}
-        {isLoggedIn ? (
-          <Switch>
-            {/* Routes placed here are only available after logging in */}
-            <Route exact path="/portfolio" component={Portfolio} />
-            <Route
-              exact
-              path="/transaction"
-              component={Transaction}
-            />
-          </Switch>
-        ) : (
-          <Switch>
-            <Route exact path="/login" component={Login} />
-          </Switch>
-        )}
-        {/* Displays our Login component as a fallback */}
-        <Route component={Login} />
-      </Switch>
-    );
-  }
-}
+const Routes = () => {
+  const { apolloToken } = useContext(UserContext);
+  return (
+    <Switch>
+      {/* Routes placed here are available to all visitors */}
+      {/* <Route exact path="/login" component={Login} /> */}
+      {apolloToken ? (
+        <Switch>
+          {/* Routes placed here are only available after logging in */}
+          <Route exact path="/portfolio" component={Portfolio} />
+          <Route exact path="/transaction" component={Transaction} />
+        </Switch>
+      ) : (
+        <Switch>
+          <Route path="/login" component={Login} />
+        </Switch>
+      )}
+      {/* Displays our Login component as a fallback */}
+      <Route component={Login} />
+    </Switch>
+  );
+};
 export default Routes;
 
 /**

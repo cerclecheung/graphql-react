@@ -6,7 +6,7 @@ export default gql`
     portfolio(limit: Int): [Stock!]
   }
   extend type Mutation {
-    createTransaction(symbol: String!, quantity: Int!): Transaction
+    createTransaction(symbol: String!, quantity: Int!): Transaction!
   }
 
   # for pagination

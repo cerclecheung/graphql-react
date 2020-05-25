@@ -21,6 +21,7 @@ const Portfolio = () => {
   if (error) return <p>{`${error}`}</p>;
   return (
     <div>
+      <div>PORTFOLIO</div>
       {data.portfolio.length ? (
         data.portfolio.map((stock) => {
           return (
@@ -40,18 +41,4 @@ const Portfolio = () => {
   );
 };
 
-// class Portfolio extends React.Component {
-//   constructor() {
-//     super();
-//   }
-
-//   componentDidMount() {
-//     client
-//       .query(readMessages)
-//       .then((messages) => console.log(messages));
-//   }
-//   render() {
-//     return <div>apollo</div>;
-//   }
-// }
 export default Portfolio;

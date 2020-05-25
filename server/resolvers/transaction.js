@@ -102,6 +102,7 @@ export default {
     createTransaction: combineResolvers(
       isAuthenticated,
       async (parent, { symbol, quantity }, { me, models }) => {
+        let res;
         try {
           const { data } = await axios({
             method: 'get',
@@ -111,31 +112,38 @@ export default {
               token: process.env.IEX_TOKEN,
             },
           });
-          console.log('data', data);
-          const currentPrice = data.quote.latestPrice;
-          const totalCost = currentPrice * quantity;
-
-          const buyer = await models.User.findByPk(me.id);
-
-          //handle  balance insufficiency
-          if (buyer.balance < totalCost) {
-            throw new UserInputError('Not enought balance');
-          }
-          const transaction = await models.Transaction.create({
-            symbol,
-            quantity,
-            price: currentPrice,
-            userId: me.id,
-          });
-
-          buyer.balance -= totalCost;
-          await buyer.save();
-
-          return transaction;
+          res = data;
         } catch (error) {
           // handle ticker error
           console.log(error);
         }
+        const { open, latestPrice } = res.quote;
+        // handle market not yet open
+        if (!open) {
+          throw new UserInputError(
+            'Please make request when market is open',
+          );
+        }
+        const totalCost = latestPrice * quantity;
+        console.log('totalCost', totalCost);
+
+        const buyer = await models.User.findByPk(me.id);
+
+        //handle balance insufficiency
+        if (buyer.balance < totalCost) {
+          throw new UserInputError('Not enought balance');
+        }
+        const transaction = await models.Transaction.create({
+          symbol,
+          quantity,
+          price: latestPrice,
+          userId: me.id,
+        });
+
+        buyer.balance -= totalCost;
+        await buyer.save();
+
+        return transaction;
       },
     ),
   },

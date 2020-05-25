@@ -1,9 +1,10 @@
-import React from 'react';
-
+import React, { useContext } from 'react';
+import { UserContext } from './context';
 import { Navbar } from './components';
 import Routes from './routes';
 import { apolloToken } from './index';
 const App = () => {
+  const { apolloToken } = useContext(UserContext);
   return (
     <div>
       <Navbar isLoggedIn={!!apolloToken} />

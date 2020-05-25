@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import { logout } from '../store';
+import { UserContext } from '../context';
+// import { logout, } from '../store';
 
 const Navbar = ({ isLoggedIn }) => {
-  const handleLogOut = () => {
-    localStorage.removeItem('apollo-token');
-  };
+  const { handleLogOut, apolloToken } = useContext(UserContext);
   return (
     <div>
       <img
@@ -22,7 +20,7 @@ const Navbar = ({ isLoggedIn }) => {
               About
             </Link>
           </div>
-          {isLoggedIn ? (
+          {apolloToken ? (
             <div>
               {/* The navbar will show these links after you log in */}
               <Link className="p-2" to="/portfolio">

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import history from '../history';
+import { UserContext } from '../context';
 
 const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -31,15 +32,19 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [mutationError, setMutationError] = useState('');
 
+  const { handleLogin } = useContext(UserContext);
+
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
   const [loginMutation] = useMutation(LOGIN, {
     //   onCompleted takes in the gql result
     onCompleted({ signIn }) {
-      localStorage.setItem('apollo-token', signIn.token);
+      //   console.log('signIn:', signIn.token);
+      handleLogin(signIn.token);
       setMutationError('');
       history.push('/portfolio');
     },
     onError(error) {
+      //   console.log('error: ', error);
       setMutationError(error.graphQLErrors[0].message);
     },
   });
