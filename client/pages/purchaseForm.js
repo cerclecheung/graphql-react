@@ -4,10 +4,13 @@ import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import history from '../history';
 
-const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    signIn(login: $email, password: $password) {
-      token
+const CREATE_TRANSACTION = gql`
+  mutation Purchase($symbol: String!, $quantity: Int!) {
+    createTransaction(symbol: $symbol, quantity: $quantity) {
+      symbol
+      user {
+        balance
+      }
     }
   }
 `;
@@ -19,57 +22,61 @@ const Purchase = ({ balance }) => {
   const [mutationError, setMutationError] = useState('');
 
   //   In the useMutation React hook defined below, the first argument of the result tuple is the mutate function;
-  const [loginMutation] = useMutation(LOGIN, {
+  const [createMutation] = useMutation(CREATE_TRANSACTION, {
     //   onCompleted takes in the gql result
-    onCompleted({ signIn }) {
-      localStorage.setItem('apollo-token', signIn.token);
+    onCompleted({ createTransaction }) {
+      console.log('complete');
       setMutationError('');
-      history.push('/portfolio');
+      setUserBalance(createTransaction.user.balance);
     },
     onError(error) {
+      console.log(error);
       setMutationError(error.graphQLErrors[0].message);
     },
   });
 
-  const _confirm = () => {
-    localStorage.removeItem('apollo-token');
-    if (login) {
-      loginMutation({ variables: { email, password } });
-    }
-    signUpMutation({ variables: { username, email, password } });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createMutation({ variables: { symbol, quantity } });
   };
 
   const _saveUserData = (token) => {
     localStorage.setItem(AUTH_TOKEN, token);
   };
-
+  console.log(quantity);
   return (
     <div>
       <h4>{`Cash - $${userBalance}`}</h4>
-      <div className="">
-        <input
-          value={symbol}
-          onChange={(e) => setSymbol(e.target.value)}
-          type="text"
-          placeholder="Ticker"
-        />
-        <input
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          type="number"
-          min="0"
-          placeholder="Number of shares"
-        />
-      </div>
-      <div className="">
+      <form name="purchase">
+        <div className="">
+          <input
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            type="text"
+            placeholder="Ticker"
+          />
+          <input
+            value={quantity}
+            onChange={(e) => {
+              const val = e.target.value;
+              return val
+                ? setQuantity(parseInt(val))
+                : setQuantity(val);
+            }}
+            type="number"
+            min="0"
+            placeholder="Number of shares"
+          />
+        </div>
         {/* rember to control the ticker and quantity input and disable button */}
-        <div
+        <button
+          disabled={!quantity || symbol === ''}
           className="pointer mr2 button"
-          onClick={() => _confirm()}
+          onClick={handleSubmit}
         >
           Buy
-        </div>
-      </div>
+        </button>
+      </form>
       {mutationError && <div>{mutationError}</div>}
     </div>
   );

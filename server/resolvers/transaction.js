@@ -111,16 +111,26 @@ export default {
               token: process.env.IEX_TOKEN,
             },
           });
-          const currentPrice = data[symbol].quote.latestPrice;
+          console.log('data', data);
+          const currentPrice = data.quote.latestPrice;
+          const totalCost = currentPrice * quantity;
+
+          const buyer = await models.User.findByPk(me.id);
 
           //handle  balance insufficiency
-          if (me.balance < currentPrice * quantity) {
+          if (buyer.balance < totalCost) {
             throw new UserInputError('Not enought balance');
           }
           const transaction = await models.Transaction.create({
-            text,
+            symbol,
+            quantity,
+            price: currentPrice,
             userId: me.id,
           });
+
+          buyer.balance -= totalCost;
+          await buyer.save();
+
           return transaction;
         } catch (error) {
           // handle ticker error
@@ -132,7 +142,7 @@ export default {
 
   Transaction: {
     user: async (transaction, args, { models }) => {
-      return await models.User.findByPk(message.userId);
+      return await models.User.findByPk(transaction.userId);
     },
   },
 };

@@ -26,5 +26,6 @@ export default gql`
     email: String!
     role: String
     messages: [Message!]
+    balance: Float!
   }
 `;
