@@ -114,6 +114,14 @@ export default {
             'Connection to IEX is not successful. Please try again',
           );
         }
+
+        // handle successful response but quote is null
+        if (!res.quote) {
+          throw new ApolloError(
+            'IEX currently does not have this ticker information',
+          );
+        }
+
         const { open, latestPrice } = res.quote;
 
         // handle market not yet open
