@@ -11,7 +11,7 @@
 		"seed": "babel-node -- script/seed.js",
 		"build":"webpack",
 		"build-client-watch": "webpack -w",
-		"start": "node server",
+		"start": "babel-node server",
 		"start-server": "nodemon -r dotenv/config  --exec babel-node server -e html,js,scss --ignore public --ignore client",
 		"start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server"
 	},
