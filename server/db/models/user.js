@@ -40,7 +40,7 @@ const user = (db, DataTypes) => {
     },
     balance: {
       type: DataTypes.DECIMAL(10, 2),
-      defaultValue: 50000.0,
+      defaultValue: 5000.0,
     },
   });
 
