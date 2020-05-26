@@ -8,7 +8,9 @@
 		"test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./script/**/*.spec.js\"  --require @babel/polyfill --require @babel/register ",
 		"test-server": "NODE_ENV='test' npm run start-server",
 		"seed": "babel-node -- script/seed.js",
+		"build":"webpack",
 		"build-client-watch": "webpack -w",
+		"start": "npm run build && npm run start-server",
 		"start-server": "nodemon -r dotenv/config  --exec babel-node server -e html,js,scss --ignore public --ignore client",
 		"start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server"
 	},
