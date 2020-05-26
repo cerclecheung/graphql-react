@@ -2,22 +2,11 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
   extend type Query {
-    transactions(cursor: String, limit: Int): TransactionConnection!
+    transactions: [Transaction!]!
     portfolioPage(limit: Int): PortfolioAndUser!
   }
   extend type Mutation {
     createTransaction(symbol: String!, quantity: Int!): Transaction!
-  }
-
-  # for pagination
-  type TransactionConnection {
-    edges: [Transaction!]!
-    transactionPageInfo: TransactionPageInfo!
-  }
-
-  type TransactionPageInfo {
-    hasNextPage: Boolean!
-    endCursor: String
   }
 
   type Transaction {
@@ -39,11 +28,4 @@ export default gql`
     value: Float!
     # user: User!
   }
-  # extend type Subscription {
-  #   messageCreated: MessageCreated!
-  # }
-
-  # type MessageCreated {
-  #   message: Message!
-  # }
 `;

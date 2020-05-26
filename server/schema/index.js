@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server-express';
 
 import userSchema from './user';
-import messageSchema from './message';
 import transctionSchema from './transaction';
 
 const linkSchema = gql`
@@ -20,9 +19,4 @@ const linkSchema = gql`
   }
 `;
 
-export default [
-  linkSchema,
-  userSchema,
-  messageSchema,
-  transctionSchema,
-];
+export default [linkSchema, userSchema, transctionSchema];

@@ -6,7 +6,7 @@
 import { db } from '../server/db';
 import models from '../server/db';
 
-const { User, Message, Transaction } = models;
+const { User, Transaction } = models;
 
 async function seed(date) {
   await db.sync({ force: true });

@@ -37,7 +37,7 @@ const user = (db, DataTypes) => {
 
   //   associations
   User.associate = (models) => {
-    User.hasMany(models.Message, { onDelete: 'CASCADE' });
+    User.hasMany(models.Transaction, { onDelete: 'CASCADE' });
   };
 
   //   signUp

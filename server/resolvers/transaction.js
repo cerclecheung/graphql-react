@@ -1,52 +1,18 @@
 import { combineResolvers } from 'graphql-resolvers';
-import { isAuthenticated, isMessageOwner } from './authorization';
-import Sequelize, { INTEGER } from 'sequelize';
+import { isAuthenticated, isTransactionOwner } from './authorization';
+import Sequelize from 'sequelize';
 import axios from 'axios';
 import { UserInputError, ApolloError } from 'apollo-server';
 
-const toCursorHash = (string) =>
-  Buffer.from(string).toString('base64');
-
-const fromCursorHash = (string) =>
-  Buffer.from(string, 'base64').toString('ascii');
-
 export default {
   Query: {
-    transactions: async (
-      parent,
-      { cursor, limit = 100 },
-      { models, me },
-    ) => {
+    transactions: async (parent, args, { models, me }) => {
       const transactions = await models.Transaction.findAll({
         order: [['createdAt', 'DESC']],
-        limit: limit + 1,
-        where: cursor
-          ? {
-              createdAt: {
-                [Sequelize.Op.lt]: fromCursorHash(cursor),
-              },
-              userId: me.id,
-            }
-          : { userId: me.id },
+        where: { userId: me.id },
       });
-      const hasNextPage = transactions.length > limit;
-      const edges = hasNextPage
-        ? transactions.slice(0, -1)
-        : transactions;
-      console.log('hasNextPage', hasNextPage);
-      return {
-        edges: edges,
-        transactionPageInfo: {
-          hasNextPage,
-          endCursor: transactions.length
-            ? toCursorHash(
-                edges[edges.length - 1].createdAt.toString(),
-              )
-            : null,
-        },
-      };
+      return transactions;
     },
-
     portfolioPage: async (
       parent,
       { limit = 100 },
@@ -63,7 +29,6 @@ export default {
         ],
         group: ['symbol'],
       });
-
       // in case there is not purchase yet, it shouldn;t be reduced
       if (!transactionSum[0]) {
         return { portfolio: [], user };
@@ -94,9 +59,7 @@ export default {
       }
 
       const portfolio = transactionSum.reduce((accu, ele) => {
-        console.log(ele.symbol, res[ele.symbol]);
         const q = res[ele.symbol].quote;
-
         const total = parseInt(ele.dataValues['total'], 10);
         accu.push({
           symbol: ele.symbol,
@@ -111,7 +74,7 @@ export default {
         });
         return accu;
       }, []);
-
+      console.log(portfolio);
       return { portfolio, user };
     },
   },
