@@ -27,7 +27,7 @@ export default {
       });
       // in case there is not purchase yet, it shouldn't be reduced
       if (!transactionSum[0]) {
-        return { portfolio: [], user };
+        return { portfolio: [], user, currentValue: 0 };
       }
 
       const symbols = transactionSum.reduce((accu, ele) => {
@@ -48,7 +48,6 @@ export default {
           },
         });
         res = data;
-        console.log(res);
       } catch (error) {
         console.error();
         throw new ApolloError(
@@ -77,7 +76,6 @@ export default {
         return accu;
       }, []);
 
-      console.log(portfolio);
       return {
         portfolio,
         user,

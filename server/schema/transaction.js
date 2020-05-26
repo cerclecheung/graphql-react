@@ -24,10 +24,8 @@ export default gql`
   }
   type Stock {
     symbol: String!
-    # price: Float!
     totalQuantity: Int!
     value: Float!
     color: String!
-    # user: User!
   }
 `;

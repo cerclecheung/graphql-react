@@ -38,7 +38,7 @@ const Login = () => {
   const [loginMutation] = useMutation(LOGIN, {
     //   onCompleted takes in the gql result
     onCompleted({ signIn }) {
-      //   console.log('signIn:', signIn.token);
+      console.log('signIn:', signIn.token);
       setTokenInStorageAndState(signIn.token);
       history.push('/portfolio');
     },
@@ -59,18 +59,15 @@ const Login = () => {
     },
   });
 
-  const _confirm = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     localStorage.removeItem('apollo-token');
     if (login) {
       loginMutation({ variables: { email, password } });
+    } else {
+      signUpMutation({ variables: { username, email, password } });
     }
-    signUpMutation({ variables: { username, email, password } });
   };
-
-  const _saveUserData = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
-  };
-  const inputStyle = 'm-2 p-2';
 
   return (
     <div className="container flex justify-center">
@@ -78,10 +75,14 @@ const Login = () => {
         <h4 className="text-green-600 text-center text-4xl">
           {login ? 'Sign In' : 'Sign Up'}
         </h4>
-        <div className="flex flex-col text-lg">
+        <form
+          className="flex flex-col text-lg"
+          onSubmit={handleSubmit}
+          name={login ? 'SignIn' : 'SignUp'}
+        >
           {!login && (
             <input
-              className={inputStyle}
+              className="m-2 p-2"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               type="text"
@@ -89,7 +90,7 @@ const Login = () => {
             />
           )}
           <input
-            className={inputStyle}
+            className="m-2 p-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="text"
@@ -98,29 +99,27 @@ const Login = () => {
             }
           />
           <input
-            className={inputStyle}
+            className="m-2 p-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Choose a safe password"
           />
           <button
+            className="bg-green-600 rounded-lg p-2 text-gray-100 self-center m-2
+            disabled:bg-gray-400"
             className="pointer mr2 button"
-            onClick={() => _confirm()}
           >
             {login ? 'login' : 'create account'}
           </button>
-          <div
-            className={inputStyle}
-            onClick={() => setLogin(!login)}
-          >
+          <div type="submit" onClick={() => setLogin(!login)}>
             {login
               ? 'need to create an account? Sign up here'
               : 'already have an account?'}
           </div>
 
           {mutationError && <div>{mutationError}</div>}
-        </div>
+        </form>
       </div>
     </div>
   );

@@ -14,8 +14,14 @@ const user = (db, DataTypes) => {
       unique: true,
       allowNull: false,
       validate: {
-        notEmpty: true,
-        isEmail: true,
+        notEmpty: {
+          args: true,
+          msg: 'Please enter an email',
+        },
+        isEmail: {
+          args: true,
+          msg: 'Email format is not valid',
+        },
       },
     },
     password: {
@@ -23,7 +29,10 @@ const user = (db, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: true,
-        len: [7, 42],
+        len: {
+          args: [7, 42],
+          msg: 'Password length must be between 7-42 characters',
+        },
       },
     },
     role: {
