@@ -34,6 +34,7 @@ export default {
         accu.push(ele.symbol);
         return accu;
       }, []);
+
       const symbolsToString = symbols.join(',');
       let res;
       try {
@@ -47,6 +48,7 @@ export default {
           },
         });
         res = data;
+        console.log(res);
       } catch (error) {
         console.error();
         throw new ApolloError(
@@ -68,12 +70,13 @@ export default {
           color:
             q.open > q.latestPrice
               ? 'red'
-              : q.open === q.latestPrice
-              ? 'grey'
-              : 'green',
+              : q.open < q.latestPrice
+              ? 'green'
+              : 'gray',
         });
         return accu;
       }, []);
+
       console.log(portfolio);
       return {
         portfolio,

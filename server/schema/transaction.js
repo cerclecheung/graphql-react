@@ -27,6 +27,7 @@ export default gql`
     # price: Float!
     totalQuantity: Int!
     value: Float!
+    color: String!
     # user: User!
   }
 `;

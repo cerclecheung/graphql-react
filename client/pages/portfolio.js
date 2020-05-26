@@ -10,6 +10,7 @@ const LOAD_PORTFOLIO = gql`
         symbol
         totalQuantity
         value
+        color
       }
       user {
         balance
@@ -41,7 +42,7 @@ const Portfolio = () => {
                   key={stock.symbol}
                   className="flex justify-between"
                 >
-                  <div className="m-2">
+                  <div className={`m-2 text-${stock.color}-500`}>
                     <span>{stock.symbol}</span>
                     <span> - </span>
                     <span>{`${stock.totalQuantity} shares `}</span>
