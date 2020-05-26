@@ -10,6 +10,13 @@ export const db = new Sequelize(
     `postgres://localhost:5432/${databaseName}`,
   {
     dialect: 'postgres',
+    ...(process.env.DATABASE_URL
+      ? {
+          dialectOptions: {
+            ssl: true,
+          },
+        }
+      : {}),
   },
 );
 
