@@ -4,6 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"deploy": "script/deploy",
 		"tailwind-build": "postcss tailwind.css -o public/tailwind.css",
 		"test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./script/**/*.spec.js\"  --require @babel/polyfill --require @babel/register ",
 		"test-server": "NODE_ENV='test' npm run start-server",
