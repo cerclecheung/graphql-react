@@ -15,8 +15,7 @@ const CREATE_TRANSACTION = gql`
   }
 `;
 
-const Purchase = ({ balance }) => {
-  const [userBalance, setUserBalance] = useState(balance);
+const Purchase = ({ userBalance, refresh }) => {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [mutationError, setMutationError] = useState('');
@@ -25,9 +24,8 @@ const Purchase = ({ balance }) => {
   const [createMutation] = useMutation(CREATE_TRANSACTION, {
     //   onCompleted takes in the gql result
     onCompleted({ createTransaction }) {
-      console.log('complete', createTransaction);
       setMutationError('');
-      setUserBalance(createTransaction.user.balance);
+      refresh();
     },
     onError(error) {
       console.error();
@@ -38,10 +36,6 @@ const Purchase = ({ balance }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createMutation({ variables: { symbol, quantity } });
-  };
-
-  const _saveUserData = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
   };
 
   return (

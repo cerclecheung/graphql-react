@@ -47,7 +47,12 @@ export default {
       };
     },
 
-    portfolio: async (parent, { limit = 100 }, { models, me }) => {
+    portfolioPage: async (
+      parent,
+      { limit = 100 },
+      { models, me },
+    ) => {
+      const user = await models.User.findByPk(me.id);
       const transactionSum = await models.Transaction.findAll({
         where: {
           userId: me.id,
@@ -61,7 +66,7 @@ export default {
 
       // in case there is not purchase yet, it shouldn;t be reduced
       if (!transactionSum[0]) {
-        return [];
+        return { portfolio: [], user };
       }
 
       const symbols = transactionSum.reduce((accu, ele) => {
@@ -78,8 +83,11 @@ export default {
           token: process.env.IEX_TOKEN,
         },
       });
+      console.log(data);
       const portfolio = transactionSum.reduce((accu, ele) => {
+        console.log(ele.symbol, data[ele.symbol]);
         const q = data[ele.symbol].quote;
+
         const total = parseInt(ele.dataValues['total'], 10);
         accu.push({
           symbol: ele.symbol,
@@ -95,7 +103,7 @@ export default {
         return accu;
       }, []);
 
-      return portfolio;
+      return { portfolio, user };
     },
   },
   Mutation: {
@@ -129,11 +137,12 @@ export default {
         console.log(latestPrice);
         console.log('totalCost', totalCost);
 
-        const buyer = await models.User.findByPk(me.id);
+        const user = await models.User.findByPk(me.id);
+        console.log(user.username);
 
         //handle balance insufficiency
-        if (buyer.balance < totalCost) {
-          console.log(buyer.balance);
+        if (user.balance < totalCost) {
+          console.log(user.balance);
           throw new UserInputError('Not enought balance');
         }
         const transaction = await models.Transaction.create({
@@ -143,8 +152,8 @@ export default {
           userId: me.id,
         });
 
-        buyer.balance -= totalCost;
-        await buyer.save();
+        user.balance -= totalCost;
+        await user.save();
 
         return transaction;
       },
