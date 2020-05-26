@@ -6,82 +6,90 @@ import { UserInputError, ApolloError } from 'apollo-server';
 
 export default {
   Query: {
-    transactions: async (parent, args, { models, me }) => {
-      const transactions = await models.Transaction.findAll({
-        order: [['createdAt', 'DESC']],
-        where: { userId: me.id },
-      });
-      return transactions;
-    },
-    portfolioPage: async (parent, args, { models, me }) => {
-      const user = await models.User.findByPk(me.id);
-      const transactionSum = await models.Transaction.findAll({
-        where: {
-          userId: me.id,
-        },
-        attributes: [
-          'symbol',
-          [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
-        ],
-        group: ['symbol'],
-      });
-      // in case there is not purchase yet, it shouldn't be reduced
-      if (!transactionSum[0]) {
-        return { portfolio: [], user, currentValue: 0 };
-      }
+    transactions: combineResolvers(
+      isAuthenticated,
+      async (parent, args, { models, me }) => {
+        const transactions = await models.Transaction.findAll({
+          order: [['createdAt', 'DESC']],
+          where: { userId: me.id },
+        });
+        return transactions;
+      },
+    ),
 
-      const symbols = transactionSum.reduce((accu, ele) => {
-        accu.push(ele.symbol);
-        return accu;
-      }, []);
-
-      const symbolsToString = symbols.join(',');
-      let res;
-      try {
-        const { data } = await axios({
-          method: 'get',
-          url: `https://cloud.iexapis.com/v1/stock/market/batch`,
-          params: {
-            types: 'quote',
-            symbols: symbolsToString,
-            token: process.env.IEX_TOKEN,
+    portfolioPage: combineResolvers(
+      isAuthenticated,
+      async (parent, args, { models, me }) => {
+        const user = await models.User.findByPk(me.id);
+        const transactionSum = await models.Transaction.findAll({
+          where: {
+            userId: me.id,
           },
+          attributes: [
+            'symbol',
+            [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
+          ],
+          group: ['symbol'],
         });
-        res = data;
-      } catch (error) {
-        console.error();
-        throw new ApolloError(
-          'Connection to IEX is not successful. Please try again',
-        );
-      }
+        // in case there is not purchase yet, it shouldn't be reduced
+        if (!transactionSum[0]) {
+          return { portfolio: [], user, currentValue: 0 };
+        }
+        // getting all the symbols from transactions and converting to string
+        const symbols = transactionSum.reduce((accu, ele) => {
+          accu.push(ele.symbol);
+          return accu;
+        }, []);
+        const symbolsToString = symbols.join(',');
 
-      let currentValue = 0;
+        let res;
+        try {
+          const { data } = await axios({
+            method: 'get',
+            url: `https://cloud.iexapis.com/v1/stock/market/batch`,
+            params: {
+              types: 'quote',
+              symbols: symbolsToString,
+              token: process.env.IEX_TOKEN,
+            },
+          });
+          res = data;
+        } catch (error) {
+          console.error();
+          throw new ApolloError(
+            'Connection to IEX is not successful. Please try again',
+          );
+        }
+        // declare variable for calculating  portfolio current worth
+        let currentValue = 0;
 
-      const portfolio = transactionSum.reduce((accu, ele) => {
-        const q = res[ele.symbol].quote;
-        const total = parseInt(ele.dataValues['total'], 10);
-        let subValue = q.latestPrice * total;
-        currentValue += subValue;
-        accu.push({
-          symbol: ele.symbol,
-          totalQuantity: total,
-          value: subValue.toFixed(2),
-          color:
-            q.open > q.latestPrice
-              ? 'red'
-              : q.open < q.latestPrice
-              ? 'green'
-              : 'gray',
-        });
-        return accu;
-      }, []);
+        const portfolio = transactionSum.reduce((accu, ele) => {
+          const q = res[ele.symbol].quote;
+          const total = parseInt(ele.dataValues['total'], 10);
+          let subValue = q.latestPrice * total;
+          // calculating  portfolio current worth
+          currentValue += subValue;
+          accu.push({
+            symbol: ele.symbol,
+            totalQuantity: total,
+            value: subValue.toFixed(2),
+            color:
+              q.open > q.latestPrice
+                ? 'red'
+                : q.open < q.latestPrice
+                ? 'green'
+                : 'gray',
+          });
+          return accu;
+        }, []);
 
-      return {
-        portfolio,
-        user,
-        currentValue: currentValue.toFixed(2),
-      };
-    },
+        return {
+          portfolio,
+          user,
+          currentValue: currentValue.toFixed(2),
+        };
+      },
+    ),
   },
   Mutation: {
     createTransaction: combineResolvers(
@@ -117,25 +125,21 @@ export default {
             'Please make request when market is open',
           );
         }
-        const totalCost = latestPrice * quantity;
-        console.log(latestPrice);
-        console.log('totalCost', totalCost);
 
+        const totalCost = latestPrice * quantity;
         const user = await models.User.findByPk(me.id);
-        console.log(user.username);
 
         //handle balance insufficiency
         if (user.balance < totalCost) {
-          console.log(user.balance);
           throw new UserInputError('Not enought balance');
         }
+        // otherwise, let's buy the stock!
         const transaction = await models.Transaction.create({
           symbol,
           quantity,
           price: latestPrice,
           userId: me.id,
         });
-
         user.balance -= totalCost;
         await user.save();
 

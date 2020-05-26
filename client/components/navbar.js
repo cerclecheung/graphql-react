@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context';
 
@@ -42,29 +41,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-/**
- * CONTAINER
- */
-// const mapState = (state) => {
-//   return {
-//     isLoggedIn: !!state.user.id,
-//   };
-// };
-
-// const mapDispatch = (dispatch) => {
-//   return {
-//     handleClick() {
-//       dispatch(logout());
-//     },
-//   };
-// };
-
-// export default connect(mapState, mapDispatch)(Navbar);
-
-/**
- * PROP TYPES
- */
-Navbar.propTypes = {
-  isLoggedIn: PropTypes.bool.isRequired,
-};

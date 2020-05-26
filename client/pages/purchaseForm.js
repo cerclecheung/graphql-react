@@ -45,7 +45,11 @@ const Purchase = ({ userBalance }) => {
 
   return (
     <div className="bg-gray-200 p-10">
-      <form name="purchase" className="flex flex-col">
+      <form
+        name="purchase"
+        className="flex flex-col"
+        onSubmit={handleSubmit}
+      >
         <h4 className="text-xl">{`Cash - $${userBalance}`}</h4>
         <input
           className={inputStyle}
@@ -68,10 +72,10 @@ const Purchase = ({ userBalance }) => {
           placeholder="Number of shares"
         />
         <button
-          className="my-3"
+          className="bg-green-600 rounded-lg p-2 text-gray-100 self-center m-2
+          disabled:bg-gray-400"
           disabled={!quantity || symbol === ''}
-          className="pointer mr2 button"
-          onClick={handleSubmit}
+          type="submit"
         >
           Buy
         </button>

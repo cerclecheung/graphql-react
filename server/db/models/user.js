@@ -3,7 +3,7 @@ const user = (db, DataTypes) => {
   const User = db.define('user', {
     username: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: { args: true, msg: 'Username not available' },
       allowNull: false,
       validate: {
         notEmpty: true,
@@ -11,7 +11,7 @@ const user = (db, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: { args: true, msg: 'Email not available' },
       allowNull: false,
       validate: {
         notEmpty: {

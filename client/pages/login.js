@@ -38,12 +38,10 @@ const Login = () => {
   const [loginMutation] = useMutation(LOGIN, {
     //   onCompleted takes in the gql result
     onCompleted({ signIn }) {
-      console.log('signIn:', signIn.token);
       setTokenInStorageAndState(signIn.token);
       history.push('/portfolio');
     },
     onError(error) {
-      //   console.log('error: ', error);
       setMutationError(error.graphQLErrors[0].message);
     },
   });
@@ -106,16 +104,24 @@ const Login = () => {
             placeholder="Choose a safe password"
           />
           <button
+            disabled={
+              login
+                ? !email || !password
+                : !email || !password || !username
+            }
             className="bg-green-600 rounded-lg p-2 text-gray-100 self-center m-2
             disabled:bg-gray-400"
-            className="pointer mr2 button"
           >
             {login ? 'login' : 'create account'}
           </button>
-          <div type="submit" onClick={() => setLogin(!login)}>
+          <div
+            type="submit"
+            onClick={() => setLogin(!login)}
+            className="text-gray-400"
+          >
             {login
-              ? 'need to create an account? Sign up here'
-              : 'already have an account?'}
+              ? 'Need to create an account? Sign up here'
+              : 'Already have an account? Sign in here'}
           </div>
 
           {mutationError && <div>{mutationError}</div>}

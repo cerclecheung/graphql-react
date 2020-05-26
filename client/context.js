@@ -37,8 +37,12 @@ export const UserProvider = (props) => {
   const [apolloToken, setToken] = useState(
     localStorage.getItem('apollo-token'),
   );
-  const loadTransactions = useQuery(LOAD_TRANSACTIONS);
-  const loadPortfolio = useQuery(LOAD_PORTFOLIO);
+  const loadTransactions = useQuery(LOAD_TRANSACTIONS, {
+    fetchPolicy: 'network-only',
+  });
+  const loadPortfolio = useQuery(LOAD_PORTFOLIO, {
+    fetchPolicy: 'network-only',
+  });
 
   const setTokenInStorageAndState = (token) => {
     localStorage.setItem('apollo-token', token);

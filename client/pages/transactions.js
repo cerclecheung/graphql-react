@@ -3,10 +3,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { UserContext } from '../context';
 
-const Transaction = () => {
-  const { loadTransactions, setTransactions } = useContext(
-    UserContext,
-  );
+const Transactions = () => {
+  const { loadTransactions } = useContext(UserContext);
   const { loading, error, data } = loadTransactions;
 
   if (loading) return <p>Loading...</p>;
@@ -40,4 +38,4 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default Transactions;
