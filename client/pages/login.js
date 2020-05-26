@@ -70,51 +70,58 @@ const Login = () => {
   const _saveUserData = (token) => {
     localStorage.setItem(AUTH_TOKEN, token);
   };
+  const inputStyle = 'm-2 p-2';
 
   return (
-    <div>
-      <h4>{login ? 'Login' : 'Sign Up'}</h4>
-      <div className="flex flex-column">
-        {!login && (
+    <div className="container flex justify-center">
+      <div className="bg-gray-100 w-1/2 p-10 m-10">
+        <h4 className="text-green-600 text-center text-4xl">
+          {login ? 'Sign In' : 'Sign Up'}
+        </h4>
+        <div className="flex flex-col text-lg">
+          {!login && (
+            <input
+              className={inputStyle}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              type="text"
+              placeholder="Your name"
+            />
+          )}
           <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            className={inputStyle}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             type="text"
-            placeholder="Your name"
+            placeholder={
+              login ? 'Your username or email' : 'Your email address'
+            }
           />
-        )}
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="text"
-          placeholder={
-            login ? 'Your username or email' : 'Your email address'
-          }
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Choose a safe password"
-        />
-      </div>
-      <div className="flex mt3">
-        <div
-          className="pointer mr2 button"
-          onClick={() => _confirm()}
-        >
-          {login ? 'login' : 'create account'}
-        </div>
-        <div
-          className="pointer button"
-          onClick={() => setLogin(!login)}
-        >
-          {login
-            ? 'need to create an account?'
-            : 'already have an account?'}
+          <input
+            className={inputStyle}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder="Choose a safe password"
+          />
+          <button
+            className="pointer mr2 button"
+            onClick={() => _confirm()}
+          >
+            {login ? 'login' : 'create account'}
+          </button>
+          <div
+            className={inputStyle}
+            onClick={() => setLogin(!login)}
+          >
+            {login
+              ? 'need to create an account? Sign up here'
+              : 'already have an account?'}
+          </div>
+
+          {mutationError && <div>{mutationError}</div>}
         </div>
       </div>
-      {mutationError && <div>{mutationError}</div>}
     </div>
   );
 };
