@@ -17,79 +17,76 @@ export default {
       },
     ),
 
-    portfolioPage: combineResolvers(
-      isAuthenticated,
-      async (parent, args, { models, me }) => {
-        const user = await models.User.findByPk(me.id);
-        const transactionSum = await models.Transaction.findAll({
-          where: {
-            userId: me.id,
+    portfolioPage: async (parent, args, { models, me }) => {
+      const user = await models.User.findByPk(me.id);
+      const transactionSum = await models.Transaction.findAll({
+        where: {
+          userId: me.id,
+        },
+        attributes: [
+          'symbol',
+          [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
+        ],
+        group: ['symbol'],
+      });
+      // in case there is not purchase yet, it shouldn't be reduced
+      if (!transactionSum[0]) {
+        return { portfolio: [], user, currentValue: 0 };
+      }
+      // getting all the symbols from transactions and converting to string
+      const symbols = transactionSum.reduce((accu, ele) => {
+        accu.push(ele.symbol);
+        return accu;
+      }, []);
+      const symbolsToString = symbols.join(',');
+
+      let res;
+      try {
+        const { data } = await axios({
+          method: 'get',
+          url: `https://cloud.iexapis.com/v1/stock/market/batch`,
+          params: {
+            types: 'quote',
+            symbols: symbolsToString,
+            token: process.env.IEX_TOKEN,
           },
-          attributes: [
-            'symbol',
-            [Sequelize.fn('sum', Sequelize.col('quantity')), 'total'],
-          ],
-          group: ['symbol'],
         });
-        // in case there is not purchase yet, it shouldn't be reduced
-        if (!transactionSum[0]) {
-          return { portfolio: [], user, currentValue: 0 };
-        }
-        // getting all the symbols from transactions and converting to string
-        const symbols = transactionSum.reduce((accu, ele) => {
-          accu.push(ele.symbol);
-          return accu;
-        }, []);
-        const symbolsToString = symbols.join(',');
+        res = data;
+      } catch (error) {
+        console.error();
+        throw new ApolloError(
+          'Connection to IEX is not successful. Please try again',
+        );
+      }
+      // declare variable for calculating  portfolio current worth
+      let currentValue = 0;
 
-        let res;
-        try {
-          const { data } = await axios({
-            method: 'get',
-            url: `https://cloud.iexapis.com/v1/stock/market/batch`,
-            params: {
-              types: 'quote',
-              symbols: symbolsToString,
-              token: process.env.IEX_TOKEN,
-            },
-          });
-          res = data;
-        } catch (error) {
-          console.error();
-          throw new ApolloError(
-            'Connection to IEX is not successful. Please try again',
-          );
-        }
-        // declare variable for calculating  portfolio current worth
-        let currentValue = 0;
+      const portfolio = transactionSum.reduce((accu, ele) => {
+        const q = res[ele.symbol].quote;
+        const total = parseInt(ele.dataValues['total'], 10);
+        let subValue = q.latestPrice * total;
+        // calculating  portfolio current worth
+        currentValue += subValue;
+        accu.push({
+          symbol: ele.symbol,
+          totalQuantity: total,
+          value: subValue.toFixed(2),
+          color:
+            q.open > q.latestPrice
+              ? 'red'
+              : q.open < q.latestPrice
+              ? 'green'
+              : 'gray',
+        });
+        return accu;
+      }, []);
 
-        const portfolio = transactionSum.reduce((accu, ele) => {
-          const q = res[ele.symbol].quote;
-          const total = parseInt(ele.dataValues['total'], 10);
-          let subValue = q.latestPrice * total;
-          // calculating  portfolio current worth
-          currentValue += subValue;
-          accu.push({
-            symbol: ele.symbol,
-            totalQuantity: total,
-            value: subValue.toFixed(2),
-            color:
-              q.open > q.latestPrice
-                ? 'red'
-                : q.open < q.latestPrice
-                ? 'green'
-                : 'gray',
-          });
-          return accu;
-        }, []);
-
-        return {
-          portfolio,
-          user,
-          currentValue: currentValue.toFixed(2),
-        };
-      },
-    ),
+      return {
+        portfolio,
+        user,
+        currentValue: currentValue.toFixed(2),
+      };
+    },
   },
   Mutation: {
     createTransaction: combineResolvers(

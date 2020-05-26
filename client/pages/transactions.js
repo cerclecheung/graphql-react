@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../context';
 
 const Transactions = () => {
   const { loadTransactions } = useContext(UserContext);
-  const { loading, error, data } = loadTransactions;
+  const { loading, error, data, refetch } = loadTransactions;
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;

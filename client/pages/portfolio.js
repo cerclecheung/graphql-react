@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import React, { useContext, useEffect } from 'react';
 import Purchase from './purchaseForm';
-import history from '../history';
 import { UserContext } from '../context';
 
 const Portfolio = () => {
   const { loadPortfolio } = useContext(UserContext);
-  const { loading, error, data } = loadPortfolio;
+  const { loading, error, data, refetch } = loadPortfolio;
+  useEffect(() => {
+    refetch();
+  }, []);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{`${error}`}</p>;
 
