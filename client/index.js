@@ -48,13 +48,13 @@ const client = new ApolloClient({
   },
 });
 ReactDOM.render(
-  <UserProvider>
-    <ApolloProvider client={client}>
+  <ApolloProvider client={client}>
+    <UserProvider>
       <Router history={history}>
         <App className="bg-orange-100" />
       </Router>
-    </ApolloProvider>
-  </UserProvider>,
+    </UserProvider>
+  </ApolloProvider>,
 
   document.getElementById('app'),
 );

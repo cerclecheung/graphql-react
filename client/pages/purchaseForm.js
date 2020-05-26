@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import history from '../history';
+import { UserContext } from '../context';
 
 const CREATE_TRANSACTION = gql`
   mutation Purchase($symbol: String!, $quantity: Int!) {
@@ -16,6 +17,7 @@ const CREATE_TRANSACTION = gql`
 `;
 
 const Purchase = ({ userBalance, refresh }) => {
+  const { loadTransactions } = useContext(UserContext);
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [mutationError, setMutationError] = useState('');
@@ -26,6 +28,7 @@ const Purchase = ({ userBalance, refresh }) => {
     onCompleted({ createTransaction }) {
       setMutationError('');
       refresh();
+      loadTransactions.refetch();
     },
     onError(error) {
       console.error();

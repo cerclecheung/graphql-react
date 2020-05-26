@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { UserContext } from '../context';
 
-const readTransactions = gql`
-  query {
-    transactions {
-      id
-      symbol
-      quantity
-      price
-    }
-  }
-`;
+// const readTransactions = gql`
+//   query {
+//     transactions {
+//       id
+//       symbol
+//       quantity
+//       price
+//     }
+//   }
+// `;
 
 const Transaction = () => {
-  const { loading, error, data, refetch } = useQuery(
-    readTransactions,
+  const { loadTransactions, setTransactions } = useContext(
+    UserContext,
   );
+  const { loading, error, data, refetch } = loadTransactions;
+  // const { loading, error, data, refetch } = useQuery(
+  // readTransactions,
+  // );
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+  setTransactions(data.transactions);
   return (
     <div className="container mx-auto">
       <div className="text-green-600 text-center text-4xl">
