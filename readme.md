@@ -1,3 +1,5 @@
+## Stock Vending Machine with GraphQL, React and PostgreSQL
+
 This project is built on React, ApolloClient, ApolloServer and Express, PostgreSQL, SequelizeORM and deployed on Heroku.
 
 I chose GraphQL over REST to take advantage of this opportunity to learn GraphQL. 
