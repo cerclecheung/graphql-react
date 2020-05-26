@@ -47,8 +47,6 @@ const client = new ApolloClient({
     }
   },
 });
-// establishes socket connection
-// import './socket';
 ReactDOM.render(
   <UserProvider>
     <ApolloProvider client={client}>

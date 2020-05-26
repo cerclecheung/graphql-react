@@ -13,7 +13,7 @@ const Routes = () => {
   return (
     <Switch>
       {/* Routes placed here are available to all visitors */}
-      {/* <Route exact path="/login" component={Login} /> */}
+      <Route path="/login" component={Login} />
       {apolloToken ? (
         <Switch>
           {/* Routes placed here are only available after logging in */}

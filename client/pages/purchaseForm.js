@@ -38,40 +38,43 @@ const Purchase = ({ userBalance, refresh }) => {
     createMutation({ variables: { symbol, quantity } });
   };
 
+  const inputStyle = 'border-solid border-4 border-gray-600 my-3 p-1';
+
   return (
-    <div>
-      <h4>{`Cash - $${userBalance}`}</h4>
-      <form name="purchase">
-        <div className="">
-          <input
-            value={symbol}
-            onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-            type="text"
-            placeholder="Ticker"
-          />
-          <input
-            value={quantity}
-            onChange={(e) => {
-              const val = e.target.value;
-              return val
-                ? setQuantity(parseInt(val))
-                : setQuantity(val);
-            }}
-            type="number"
-            min="0"
-            placeholder="Number of shares"
-          />
-        </div>
-        {/* rember to control the ticker and quantity input and disable button */}
+    <div className="bg-gray-200 p-10">
+      <form name="purchase" className="flex flex-col">
+        <h4 className="text-xl">{`Cash - $${userBalance}`}</h4>
+        <input
+          className={inputStyle}
+          value={symbol}
+          onChange={(e) => setSymbol(e.target.value.toUpperCase())}
+          type="text"
+          placeholder="Ticker"
+        />
+        <input
+          className={inputStyle}
+          value={quantity}
+          onChange={(e) => {
+            const val = e.target.value;
+            return val
+              ? setQuantity(parseInt(val))
+              : setQuantity(val);
+          }}
+          type="number"
+          min="0"
+          placeholder="Number of shares"
+        />
         <button
+          className="my-3"
           disabled={!quantity || symbol === ''}
           className="pointer mr2 button"
           onClick={handleSubmit}
         >
           Buy
         </button>
+        {/* rember to control the ticker and quantity input and disable button */}
       </form>
-      {mutationError && <div>{mutationError}</div>}
+      {mutationError && <div className="my-3">{mutationError}</div>}
     </div>
   );
 };

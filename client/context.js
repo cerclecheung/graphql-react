@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
+import history from './history';
 
 export const UserContext = createContext();
 
@@ -15,6 +16,7 @@ export const UserProvider = (props) => {
   const handleLogOut = (e) => {
     setToken('');
     localStorage.removeItem('apollo-token');
+    history.push('/login');
   };
 
   return (

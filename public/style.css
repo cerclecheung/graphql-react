@@ -14,6 +14,11 @@ nav a {
   display: inline-block;
   margin: 1em;
 } */
+@import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+
+@import 'tailwindcss/utilities';
 
 .react-datepicker-wrapper {
   display: flex !important;

@@ -20,6 +20,7 @@ export default gql`
   type PortfolioAndUser {
     portfolio: [Stock!]
     user: User!
+    currentValue: Float!
   }
   type Stock {
     symbol: String!

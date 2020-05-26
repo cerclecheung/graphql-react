@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context';
-// import { logout, } from '../store';
 
-const Navbar = ({ isLoggedIn }) => {
+const Navbar = () => {
   const { handleLogOut, apolloToken } = useContext(UserContext);
   return (
     <div>
@@ -15,11 +14,6 @@ const Navbar = ({ isLoggedIn }) => {
       />
       <nav>
         <div className="flex justify-between px-10 ">
-          <div>
-            <Link className="p-2" to="/">
-              About
-            </Link>
-          </div>
           {apolloToken ? (
             <div>
               {/* The navbar will show these links after you log in */}

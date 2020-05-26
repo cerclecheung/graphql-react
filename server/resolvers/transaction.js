@@ -13,11 +13,7 @@ export default {
       });
       return transactions;
     },
-    portfolioPage: async (
-      parent,
-      { limit = 100 },
-      { models, me },
-    ) => {
+    portfolioPage: async (parent, args, { models, me }) => {
       const user = await models.User.findByPk(me.id);
       const transactionSum = await models.Transaction.findAll({
         where: {
@@ -29,7 +25,7 @@ export default {
         ],
         group: ['symbol'],
       });
-      // in case there is not purchase yet, it shouldn;t be reduced
+      // in case there is not purchase yet, it shouldn't be reduced
       if (!transactionSum[0]) {
         return { portfolio: [], user };
       }
@@ -58,13 +54,17 @@ export default {
         );
       }
 
+      let currentValue = 0;
+
       const portfolio = transactionSum.reduce((accu, ele) => {
         const q = res[ele.symbol].quote;
         const total = parseInt(ele.dataValues['total'], 10);
+        let subValue = q.latestPrice * total;
+        currentValue += subValue;
         accu.push({
           symbol: ele.symbol,
           totalQuantity: total,
-          value: (q.latestPrice * total).toFixed(2),
+          value: subValue.toFixed(2),
           color:
             q.open > q.latestPrice
               ? 'red'
@@ -75,7 +75,11 @@ export default {
         return accu;
       }, []);
       console.log(portfolio);
-      return { portfolio, user };
+      return {
+        portfolio,
+        user,
+        currentValue: currentValue.toFixed(2),
+      };
     },
   },
   Mutation: {
