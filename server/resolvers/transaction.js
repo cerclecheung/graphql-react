@@ -2,7 +2,7 @@ import { combineResolvers } from 'graphql-resolvers';
 import { isAuthenticated, isMessageOwner } from './authorization';
 import Sequelize, { INTEGER } from 'sequelize';
 import axios from 'axios';
-import { UserInputError } from 'apollo-server';
+import { UserInputError, ApolloError } from 'apollo-server';
 
 const toCursorHash = (string) =>
   Buffer.from(string).toString('base64');
@@ -74,19 +74,28 @@ export default {
         return accu;
       }, []);
       const symbolsToString = symbols.join(',');
-      const { data } = await axios({
-        method: 'get',
-        url: `https://cloud.iexapis.com/v1/stock/market/batch`,
-        params: {
-          types: 'quote',
-          symbols: symbolsToString,
-          token: process.env.IEX_TOKEN,
-        },
-      });
-      console.log(data);
+      let res;
+      try {
+        const { data } = await axios({
+          method: 'get',
+          url: `https://cloud.iexapis.com/v1/stock/market/batch`,
+          params: {
+            types: 'quote',
+            symbols: symbolsToString,
+            token: process.env.IEX_TOKEN,
+          },
+        });
+        res = data;
+      } catch (error) {
+        console.error();
+        throw new ApolloError(
+          'Connection to IEX is not successful. Please try again',
+        );
+      }
+
       const portfolio = transactionSum.reduce((accu, ele) => {
-        console.log(ele.symbol, data[ele.symbol]);
-        const q = data[ele.symbol].quote;
+        console.log(ele.symbol, res[ele.symbol]);
+        const q = res[ele.symbol].quote;
 
         const total = parseInt(ele.dataValues['total'], 10);
         accu.push({
@@ -122,17 +131,24 @@ export default {
           });
           res = data;
         } catch (error) {
+          console.error();
           // handle ticker error
-          console.log(error);
+          if (error.response.data === 'Unknown symbol') {
+            throw new UserInputError(error.response.data);
+          }
+          // handle other possible errors
+          throw new ApolloError(
+            'Connection to IEX is not successful. Please try again',
+          );
         }
         const { open, latestPrice } = res.quote;
 
         // handle market not yet open
-        // if (!open) {
-        //   throw new UserInputError(
-        //     'Please make request when market is open',
-        //   );
-        // }
+        if (!open) {
+          throw new UserInputError(
+            'Please make request when market is open',
+          );
+        }
         const totalCost = latestPrice * quantity;
         console.log(latestPrice);
         console.log('totalCost', totalCost);

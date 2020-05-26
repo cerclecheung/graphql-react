@@ -45,7 +45,7 @@ const Purchase = ({ userBalance, refresh }) => {
         <div className="">
           <input
             value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
+            onChange={(e) => setSymbol(e.target.value.toUpperCase())}
             type="text"
             placeholder="Ticker"
           />
