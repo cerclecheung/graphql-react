@@ -16,12 +16,29 @@ const LOAD_TRANSACTIONS = gql`
   }
 `;
 
+const LOAD_PORTFOLIO = gql`
+  query($limit: Int) {
+    portfolioPage(limit: $limit) {
+      portfolio {
+        symbol
+        totalQuantity
+        value
+        color
+      }
+      user {
+        balance
+      }
+      currentValue
+    }
+  }
+`;
+
 export const UserProvider = (props) => {
   const [apolloToken, setToken] = useState(
     localStorage.getItem('apollo-token'),
   );
-  const [transactions, setTransactions] = useState([]);
   const loadTransactions = useQuery(LOAD_TRANSACTIONS);
+  const loadPortfolio = useQuery(LOAD_PORTFOLIO);
 
   const setTokenInStorageAndState = (token) => {
     localStorage.setItem('apollo-token', token);
@@ -41,7 +58,7 @@ export const UserProvider = (props) => {
         setTokenInStorageAndState,
         handleLogOut,
         loadTransactions,
-        setTransactions,
+        loadPortfolio,
       }}
     >
       {props.children}

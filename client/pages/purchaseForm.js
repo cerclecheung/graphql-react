@@ -16,8 +16,8 @@ const CREATE_TRANSACTION = gql`
   }
 `;
 
-const Purchase = ({ userBalance, refresh }) => {
-  const { loadTransactions } = useContext(UserContext);
+const Purchase = ({ userBalance }) => {
+  const { loadTransactions, loadPortfolio } = useContext(UserContext);
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [mutationError, setMutationError] = useState('');
@@ -27,7 +27,7 @@ const Purchase = ({ userBalance, refresh }) => {
     //   onCompleted takes in the gql result
     onCompleted({ createTransaction }) {
       setMutationError('');
-      refresh();
+      loadPortfolio.refetch();
       loadTransactions.refetch();
     },
     onError(error) {

@@ -20,8 +20,8 @@ const Navbar = () => {
               <Link className="p-2" to="/portfolio">
                 Portfolio
               </Link>
-              <Link className="p-2" to="/transaction">
-                Transaction
+              <Link className="p-2" to="/transactions">
+                Transactions
               </Link>
               <a className="p-2" href="#" onClick={handleLogOut}>
                 Logout

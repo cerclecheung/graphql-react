@@ -1,29 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import React, { useContext } from 'react';
+import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import Purchase from './purchaseForm';
 import history from '../history';
-const LOAD_PORTFOLIO = gql`
-  query($limit: Int) {
-    portfolioPage(limit: $limit) {
-      portfolio {
-        symbol
-        totalQuantity
-        value
-        color
-      }
-      user {
-        balance
-      }
-      currentValue
-    }
-  }
-`;
+import { UserContext } from '../context';
 
 const Portfolio = () => {
-  const { loading, error, data, refetch } = useQuery(LOAD_PORTFOLIO, {
-    variables: { limit: 2 },
-  });
+  const { loadPortfolio } = useContext(UserContext);
+  const { loading, error, data } = loadPortfolio;
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{`${error}`}</p>;
 
@@ -55,10 +39,7 @@ const Portfolio = () => {
             <div>You haven't bought any stock yet</div>
           )}
         </div>
-        <Purchase
-          userBalance={user.balance}
-          refresh={() => refetch()}
-        ></Purchase>
+        <Purchase userBalance={user.balance}></Purchase>
       </div>
     </div>
   );
