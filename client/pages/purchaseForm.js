@@ -54,7 +54,10 @@ const Purchase = ({ userBalance }) => {
         <input
           className={inputStyle}
           value={symbol}
-          onChange={(e) => setSymbol(e.target.value.toUpperCase())}
+          onChange={(e) => (
+            setSymbol(e.target.value.toUpperCase()),
+            setMutationError('')
+          )}
           type="text"
           placeholder="Ticker"
         />
@@ -64,8 +67,8 @@ const Purchase = ({ userBalance }) => {
           onChange={(e) => {
             const val = e.target.value;
             return val
-              ? setQuantity(parseInt(val))
-              : setQuantity(val);
+              ? (setQuantity(parseInt(val)), setMutationError(''))
+              : (setQuantity(val), setMutationError(''));
           }}
           type="number"
           min="0"

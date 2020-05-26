@@ -684,7 +684,7 @@ const Purchase = ({
   }, `Cash - $${userBalance}`), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     className: inputStyle,
     value: symbol,
-    onChange: e => setSymbol(e.target.value.toUpperCase()),
+    onChange: e => (setSymbol(e.target.value.toUpperCase()), setMutationError('')),
     type: "text",
     placeholder: "Ticker"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -692,7 +692,7 @@ const Purchase = ({
     value: quantity,
     onChange: e => {
       const val = e.target.value;
-      return val ? setQuantity(parseInt(val)) : setQuantity(val);
+      return val ? (setQuantity(parseInt(val)), setMutationError('')) : (setQuantity(val), setMutationError(''));
     },
     type: "number",
     min: "0",
