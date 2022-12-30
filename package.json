@@ -67,7 +67,7 @@
 		"chai": "^4.2.0",
 		"css-loader": "^3.5.3",
 		"dotenv": "^8.2.0",
-		"mocha": "^7.1.2",
+		"mocha": "^10.2.0",
 		"nodemon": "^2.0.4",
 		"prettier": "^2.0.5",
 		"redux-devtools-extension": "^2.13.8",
